@@ -145,6 +145,10 @@ var snap = function (line1, line2) {
 
 actions = [];
 
+var idNotDefinedErrorWasShown = false;
+
+var noWaysErrorWasShown = false;
+
 console.log("-----VALIDATION STARTED---------");
 
 console.log("Lines:");
@@ -229,6 +233,34 @@ for (var i = 0; i < lines.length; i++) {
 		console.log("Duplicated id is destroyed by Adobe Illustrator. Action id: " + String(actions.length - 1) + ". Line: ");
 		console.log(lines[i]);
 	}
+
+	if(lines[i].id == "" && !idNotDefinedErrorWasShown) {
+		console.log("-------------------------------------");	
+		actions.push(
+			{
+				type: "id-missing",
+				exec: function() {
+					defineIds();
+				}
+			}
+		)
+		console.log("Some lines don't have IDs. Action id: " + String(actions.length - 1));
+		idNotDefinedErrorWasShown = true;
+	}
+
+	if(lines[0].getAttribute("ways") == null && !noWaysErrorWasShown) {
+		console.log("-------------------------------------");	
+		actions.push(
+			{
+				type: "no-ways",
+				exec: function() {
+					predefineConnections();
+				}
+			}
+		)
+		noWaysErrorWasShown = true;
+		console.log("Some lines don't have predefined ways. Action id: " + String(actions.length - 1));
+	}
 }
 
 var rooms = Array.prototype.slice.call(document.getElementById("Rooms").childNodes);
@@ -278,6 +310,14 @@ runAllActions = function () {
 			console.log("Fixed! New property:");
 			console.log(actions[i].prop);
 			console.log("-------------------------------------");
+		} else if(actions[i].type == "id-missing") {
+			actions[i].exec();
+			console.log("ID was defined for all lines that didn't have it.");
+			console.log("-------------------------------------");
+		} else if(actions[i].type == "no-ways") {
+			actions[i].exec();
+			console.log("Ways were generated for every line.");
+			console.log("-------------------------------------");
 		}
 	}
 	console.log("------ALL-ACTIONS-ARE-DONE------");
@@ -288,10 +328,26 @@ if (actions.length > 0) {
 	console.log("All actions can be executed with runAllActions();")
 }
 
+var defineIds = function() {
+	for(let i = 0; i < lines.length; i++) {
+		if(lines[i].id=="") {
+			lines[i].id="line" + i;
+		}
+	}
+}
 
 
+var predefineConnections = function() {
+	for(let i = 0; i < lines.length; i++) {
+		let curLineCoords = getXAndYByHTML(lines[i]);
+		lines[i].setAttribute("ways", "");
+		for(let j = 0; j < lines.length; j++) {
+			let compLineCoords = getXAndYByHTML(lines[j]);
+			let distanceBetweenLines = distanceBetweenClosestEnds(curLineCoords, compLineCoords);
 
-
-
-
-
+			if(distanceBetweenLines <= Number.EPSILON) {
+				lines[i].setAttribute("ways", lines[i].getAttribute("ways") + (lines[i].getAttribute("ways").length == 0 ? "" : ",") + lines[j].id);
+			}
+		}
+	}
+}
