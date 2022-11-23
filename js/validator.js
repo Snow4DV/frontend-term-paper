@@ -342,6 +342,8 @@ var predefineConnections = function() {
 		let curLineCoords = getXAndYByHTML(lines[i]);
 		lines[i].setAttribute("ways", "");
 		for(let j = 0; j < lines.length; j++) {
+			if(i == j) continue;
+			
 			let compLineCoords = getXAndYByHTML(lines[j]);
 			let distanceBetweenLines = distanceBetweenClosestEnds(curLineCoords, compLineCoords);
 
