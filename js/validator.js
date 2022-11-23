@@ -280,11 +280,18 @@ runAllActions = function () {
 			console.log("-------------------------------------");
 		}
 	}
+	console.log("------ALL-ACTIONS-ARE-DONE------");
+
 }
 
 if (actions.length > 0) {
 	console.log("All actions can be executed with runAllActions();")
 }
+
+
+
+
+
 
 
 
