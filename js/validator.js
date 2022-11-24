@@ -343,7 +343,7 @@ var predefineConnections = function() {
 		lines[i].setAttribute("ways", "");
 		for(let j = 0; j < lines.length; j++) {
 			if(i == j) continue;
-			
+
 			let compLineCoords = getXAndYByHTML(lines[j]);
 			let distanceBetweenLines = distanceBetweenClosestEnds(curLineCoords, compLineCoords);
 
@@ -353,3 +353,39 @@ var predefineConnections = function() {
 		}
 	}
 }
+
+
+var buildPath = function(startId, destinationId) {
+	let paths = [];
+
+	let minPath = null;
+	let minPathLength = Infinity;
+	recursiveFindPath(startId, destinationId, [], paths);
+	for(let i = 0; i < paths.length; i++) {
+		if(paths[i].length < minPathLength) {
+			minPath = paths[i];
+		}
+	}
+	console.log("PATH:");
+	console.log(minPath);
+}
+
+
+var recursiveFindPath = function(currentLineId, destinationId, passedLines, pathArray) {
+	let curLine = document.getElementById(currentLineId);
+	passedLines.push(currentLineId);
+
+	if(currentLineId == destinationId) {
+		pathArray.push(passedLines);
+		return;
+	}
+
+	let ways = curLine.getAttribute("ways").split(",");
+
+	for(let i = 0; i < ways.length; i++) {
+		if(!ways[i].includes(destinationId)) {
+			recursiveFindPath(ways[i], destinationId, [...passedLines]);
+		}
+	}
+}
+
