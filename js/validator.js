@@ -384,103 +384,138 @@ var predefineLengths = function() {
 
 }
 
-
-var buildPath = function(startId, destinationId) {
-	let paths = [];
-
-	let minPath = null;
-	let minPathLength = Infinity;
-	recursiveFindPath(startId, destinationId, [], paths);
-	for(let i = 0; i < paths.length; i++) {
-		if(paths[i].length < minPathLength) {
-			minPath = paths[i];
-		}
-	}
-	console.log("PATH:");
-	console.log(minPath);
+var getChildElementById = function(parentId, childId) {
+	return document.querySelectorAll('#' + parentId + ' > #' + childId)[0];
 }
 
-
-var recursiveFindPath = function(currentLineId, destinationId, passedLines, pathArray) {
-	let curLine = document.querySelectorAll('#Paths > #' + currentLineId)[0];
+var getLineById = function(childId) {
+	let curLine = document.querySelectorAll('#Paths > #' + childId)[0];
 	if(curLine == null) {
-		curLine = document.querySelectorAll('#Doors > #' + currentLineId)[0];
+		curLine = document.querySelectorAll('#Doors > #' + childId)[0];
 	}
 	if(curLine == null) {
-		curLine = document.querySelectorAll("#Portals > #" + currentLineId)[0];	
+		curLine = document.querySelectorAll("#Portals > #" + childId)[0];	
 	}
-	let newPassedLines = [...passedLines];
-	newPassedLines.push(currentLineId);
-
-	if(currentLineId == destinationId) {
-		pathArray.push(newPassedLines);
-		return;
-	}
-
-	if(passedLines.length > 4) return;
-	//console.log(passedLines);
-
-	let ways = curLine.getAttribute("ways").split(",");
-
-	for(let i = 0; i < ways.length; i++) {
-		if(!ways[i].includes(destinationId)) {
-			recursiveFindPath(currentLineId, ways[i], destinationId, newPassedLines);
-		}
-	}
+	return curLine;
 }
 
 var getConnectedNodes = function(node) {
 	let ways = node.getAttribute("ways").split(",");
+	let result = [];
 	for(let i = 0; i < ways.length; i++) {
-		
+		result.push(getLineById(ways[i]));
 	}
+	return result;
 }
+
 
 var createGraph = function() {
-	let graph = new Graph();
+	graph = new Graph();
 	for(let i = 0; i < lines.length; i++) {
 		if(!isPortalOrDoor(lines[i])) {
-			let line = lines[i];
-
+			let coords = getXAndYByHTML(lines[i]);
+			graph.addLine(coords.x1, coords.y1, lines[i].id, coords.x2, coords.y2);
 		}
+		
+	}
+	
+	findPath = function(startId, endId) {
+		graph.findPathWithDijkstraByIds(startId, endId);
 	}
 }
 
+class GraphNode {
+	constructor(x,y, id) {
+		this.x = x;
+		this.y = y;
+		this.connectedIds = [];
+		this.connectedIds.push(id);
+	}
 
-class Graph
-{
-    constructor() {
-        this.nodes = [];
-        this.adjacencyList = {};
-    }
+	addConnectedId(id) {
+		this.connectedIds.push(id);
+	}
 
-    addNode(node) {
-        this.nodes.push(node);
-        this.adjacencyList[node] = [];
-    }
+	getConnectedIds() {
+		return [...this.connectedIds];
+	}
 
-	checkIfNodeExistsById(id) {
-		for(let i = 0; i < this.nodes.length; i++) {
-			if(typeof(node[i].id) != "undefined" && node[i].id == id) {
+	equals(x,y) {
+		return this.x == x && this.y == y;
+	}
+
+	checkIfIdIsPresent(id) {
+		for(let i = 0; i < this.connectedIds.length; i++) {
+			if(this.connectedIds[i] == id) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	key() {
+		return JSON.stringify({x: this.x, y: this.y});
+	}
+
+
+}
+
+class Graph
+{
+
+    constructor() {
+        this.nodes = [];
+        this.adjacencyList = {};
+    }
+
+    addLine(x, y, id, conX, conY) {
+		let node1 = this.addNode(x, y, id);
+        let node2 = this.addNode(conX, conY, id);
+		this.addEdge(node1, node2, distance(x,y,conX,conY));
+    }
+
+	addNode(x, y, id) {
+		let addNode = this.getNodeByCoords(x, y);
+		if(addNode == null) {
+			let newNode = new GraphNode(x, y, id);
+			this.nodes.push(newNode);
+        	this.adjacencyList[newNode.key()] = [];
+			return newNode;
+		} else {
+			addNode.addConnectedId(id);
+			return addNode;
+		}
+        
+    }
+
+	distance(x1, y1, x2, y2) {
+		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+	}
+
+
+
 
 	getNodeById(id) {
 		for(let i = 0; i < this.nodes.length; i++) {
-			if(typeof(node[i].id) != "undefined" && node[i].id == id) {
-				return node[i];
+			if(this.nodes[i].checkIfIdIsPresent(id)) {
+				return this.nodes[i];
 			}
 		}
 		return null;
 	}
 
-	checkIfNodeExists(node) {
+
+	getNodeByCoords(x, y) {
 		for(let i = 0; i < this.nodes.length; i++) {
-			if(node[i] == node) {
+			if(this.nodes[i].x == x && this.nodes[i].y == y) {
+				return this.nodes[i];
+			}
+		}
+		return null;
+	}
+	checkIfNodeExistsById(id) {
+		for(let i = 0; i < this.nodes.length; i++) {
+			if(this.nodes[i].checkIfIdIsPresent(id)) {
 				return true;
 			}
 		}
@@ -489,20 +524,24 @@ class Graph
 
 
     addEdge(node1, node2, weight) {
-        this.adjacencyList[node1].push({node:node2, weight: weight});
-        this.adjacencyList[node2].push({node:node1, weight: weight});
+        this.adjacencyList[node1.key()].push({node:node2, weight: weight});
+        this.adjacencyList[node2.key()].push({node:node1, weight: weight});
     }
+
+	findPathWithDijkstraByIds(startId, endId) {
+		this.findPathWithDijkstra(this.getNodeById(startId), this.getNodeById(endId));
+	}
 
     findPathWithDijkstra(startNode, endNode) {
         let times = {};
         let backtrace = {};
         let pq = new PriorityQueue();
 
-        times[startNode] = 0;
+        times[startNode.key()] = 0;
 
         this.nodes.forEach(node => {
-            if (node !== startNode) {
-                times[node] = Infinity
+            if (node.key() !== startNode.key()) {
+                times[node.key()] = Infinity;
             }
         });
 
@@ -511,12 +550,12 @@ class Graph
         while (!pq.isEmpty()) {
             let shortestStep = pq.dequeue();
             let currentNode = shortestStep[0];
-            this.adjacencyList[currentNode].forEach(neighbor => {
-                let time = times[currentNode] + neighbor.weight;
+            this.adjacencyList[currentNode.key()].forEach(neighbor => {
+                let time = times[currentNode.key()] + neighbor.weight;
 
-                if (time < times[neighbor.node]) {
-                    times[neighbor.node] = time;
-                    backtrace[neighbor.node] = currentNode;
+                if (time < times[neighbor.node.key()]) {
+                    times[neighbor.node.key()] = time;
+                    backtrace[neighbor.node.key()] = currentNode;
                     pq.enqueue([neighbor.node, time]);
                 }
             });
@@ -525,10 +564,11 @@ class Graph
         let path = [endNode];
         let lastStep = endNode;
         while(lastStep !== startNode) {
-            path.unshift(backtrace[lastStep])
-            lastStep = backtrace[lastStep]
+            path.unshift(backtrace[lastStep.key()])
+            lastStep = backtrace[lastStep.key()]
         }
-        console.log(`Path is ${path} and time is ${times[endNode]}`)
+        console.log(`Path is ${path} and time is ${times[endNode.key()]}`);
+		console.log(path);
         return path
     }
 }
