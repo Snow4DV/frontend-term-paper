@@ -54,6 +54,10 @@ for (var i = 0; i < childNodes.length; i++) {
 	}
 }
 
+var length = function(coords) {
+	return distance(coords.x1,coords.y1, coords.x2, coords.y2);
+}
+
 var distance = function (x1, y1, x2, y2) {
 	return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 }
@@ -146,8 +150,8 @@ var snap = function (line1, line2) {
 actions = [];
 
 var idNotDefinedErrorWasShown = false;
-
 var noWaysErrorWasShown = false;
+var noLengthErrorWasShown = false;
 
 console.log("-----VALIDATION STARTED---------");
 
@@ -261,6 +265,19 @@ for (var i = 0; i < lines.length; i++) {
 		noWaysErrorWasShown = true;
 		console.log("Some lines don't have predefined ways. Action id: " + String(actions.length - 1));
 	}
+	if(lines[i].getAttribute("length") == null && !noLengthErrorWasShown) {
+		console.log("-------------------------------------");
+		actions.push(
+			{
+				type: "no-length",
+				exec: function() {
+					predefineLengths();
+				}
+			}
+		);
+		noLengthErrorWasShown = true;
+		console.log("Some lines don't have predefined lengths. Action id: " + String(actions.length - 1));
+	}
 }
 
 var rooms = Array.prototype.slice.call(document.getElementById("Rooms").childNodes);
@@ -318,6 +335,11 @@ runAllActions = function () {
 			actions[i].exec();
 			console.log("Ways were generated for every line.");
 			console.log("-------------------------------------");
+		} else if(actions[i].type == "no-length") {
+
+			actions[i].exec();
+			console.log("Lengths were generated for every line.");
+			console.log("-------------------------------------");
 		}
 	}
 	console.log("------ALL-ACTIONS-ARE-DONE------");
@@ -352,4 +374,12 @@ var predefineConnections = function() {
 			}
 		}
 	}
+}
+
+var predefineLengths = function() {
+	for(let i = 0; i < lines.length; i++) {
+		let foundLength = String(length(getXAndYByHTML(lines[i])));
+		lines[i].setAttribute("length", foundLength);
+	}
+
 }
