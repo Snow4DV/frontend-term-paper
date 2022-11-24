@@ -402,19 +402,29 @@ var buildPath = function(startId, destinationId) {
 
 
 var recursiveFindPath = function(currentLineId, destinationId, passedLines, pathArray) {
-	let curLine = document.getElementById(currentLineId);
-	passedLines.push(currentLineId);
+	let curLine = document.querySelectorAll('#Paths > #' + currentLineId)[0];
+	if(curLine == null) {
+		curLine = document.querySelectorAll('#Doors > #' + currentLineId)[0];
+	}
+	if(curLine == null) {
+		curLine = document.querySelectorAll("#Portals > #" + currentLineId)[0];	
+	}
+	let newPassedLines = [...passedLines];
+	newPassedLines.push(currentLineId);
 
 	if(currentLineId == destinationId) {
-		pathArray.push(passedLines);
+		pathArray.push(newPassedLines);
 		return;
 	}
+
+	if(passedLines.length > 4) return;
+	//console.log(passedLines);
 
 	let ways = curLine.getAttribute("ways").split(",");
 
 	for(let i = 0; i < ways.length; i++) {
 		if(!ways[i].includes(destinationId)) {
-			recursiveFindPath(ways[i], destinationId, [...passedLines]);
+			recursiveFindPath(currentLineId, ways[i], destinationId, newPassedLines);
 		}
 	}
 }
