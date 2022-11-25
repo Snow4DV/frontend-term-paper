@@ -19,6 +19,15 @@ var isPortalOrDoor = function (node) {
 
 
 
+var getTypeOfLine = function (node) {
+	let type = node.parentElement.id;
+	type = type.substring(0, type.length - 1);
+	return type;
+}
+
+
+
+
 
 
 var areLinesConnected = function areLinesConnected(coords1, coords2) {
@@ -659,46 +668,140 @@ class PriorityQueue {
 	};
 }
 
-var roomUpdateFunc = function(shape, title, rooms, index) {
+var roomUpdateFunc = function (shape, title, rooms, index, nextCall, oldClass) {
 	shape.parentElement.removeChild(shape);
-	title.parentElement.removeChild(title);
+
+	if (title != null) title.parentElement.removeChild(title);
 
 
 	let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
 	newGroup.appendChild(shape);
-	newGroup.appendChild(title);
+	if (title != null) newGroup.appendChild(title);
 
-	title.setAttributeNS(null, "class", "st8");
+
 	let newId = prompt("Enter new id for " + "aud" + index + " or BREAK to stop:");
-	if(newId == "BREAK") {
+	shape.setAttributeNS(null, "class", oldClass);
+	shape.removeAttribute("fill");
+	if (newId == "BREAK") {
 		return;
 	}
 	newGroup.setAttribute("id", newId);
 	rooms.appendChild(newGroup);
-	if (i< 2000) {
-		moveRoomsToSeparateLayer(++index, rooms);
+
+
+	nextCall();
+
+
+}
+
+var moveRoomsAction = function () {
+	moveRoomsToSeparateLayer(["aud", "wc", "din"]);
+}
+
+
+var unred = function () {
+	for (let i = 0; i < lines.length; i++) {
+		if (lines[i].getAttribute("stroke") != null) {
+			let newColor = "";
+			
+			switch (getTypeOfLine(lines[i])) {
+				case "Door":
+					newColor = "#00FF00";
+					break;
+				case "Portal":
+					newColor = "#A020F0";
+					break;
+				case "Path":
+					newColor = "#000000";
+					break;
+			}
+			lines[i].setAttribute("stroke", newColor);
+		}
 	}
 }
 
 
-
-var moveRoomsToSeparateLayer = function (roomsIndex, rooms) {
+var moveRoomsToSeparateLayer = function (prefixes, roomsIndex, rooms, curPrefix) {
 	if (rooms == null) {
 		rooms = document.getElementById("Rooms");
-	} 
-	if(roomsIndex == null) {
+	}
+	if (roomsIndex == null) {
 		roomsIndex = 0;
 	}
 
-	let shape = document.getElementById("aud" + roomsIndex);
-	let title = document.getElementById("aud" + roomsIndex + "_0");
-
-	if (shape != null && title != null) {
-		title.setAttributeNS(null, "class", "st7");
-		setTimeout(roomUpdateFunc.bind(null, shape, title, rooms, roomsIndex), 70); // Dumb hack - we have to wait until browser updates the svg. Otherwise prompt hangs everything
-	} else {
-		moveRoomsToSeparateLayer(++roomsIndex, rooms);
+	if (curPrefix == null) {
+		prefix = 0;
 	}
-	
-	
+
+	if (curPrefix == null) {
+		curPrefix = prefixes.pop();
+	}
+
+	if (roomsIndex > 2000 && prefixes.length > 0) {
+		curPrefix = prefixes.pop();
+		roomsIndex = 0;
+	} else if (roomsIndex > 2000) {
+		return;
+	}
+	let shape = getChildElementById("svgMap", curPrefix + roomsIndex);
+	let title = getChildElementById("svgMap", curPrefix + roomsIndex + "_0");
+
+	if (shape != null) {
+		let oldClass = shape.getAttributeNS(null, "class");
+		shape.setAttributeNS(null, "class", "");
+		shape.setAttributeNS(null, "fill", "#FF0000");
+		setTimeout(roomUpdateFunc.bind(null, shape, title, rooms, roomsIndex, moveRoomsToSeparateLayer.bind(null, prefixes, roomsIndex + 1, rooms, curPrefix), oldClass), 70); // Dumb hack - we have to wait until browser updates the svg. Otherwise prompt hangs everything
+	} else {
+		moveRoomsToSeparateLayer(prefixes, ++roomsIndex, rooms, curPrefix);
+	}
+
+
+}
+
+
+var nameDoorsAccordingToRoomNames = function() {
+	let rooms = document.getElementById("Rooms").childNodes;
+	let doors = document.getElementById("Doors").childNodes;
+
+	for(let j = 0; j < doors.length; j++) {
+		if(doors[j].nodeType == 3) continue; // Text nodes are being skipped
+
+		let lineCoords = getXAndYByHTML(doors[j]);
+
+		if(doors[j].getAttribute("ways") == "" || doors[j].getAttribute("ways") == null) {
+			console.error("Door doesn't have ways:");
+			console.error(doors[j]);
+			return;
+		}
+
+		let pathLineNextToDoorCoords = getXAndYByHTML(getLineById(doors[j].getAttribute("ways")));
+
+		let doorConnectionStatus = areLinesConnected(lineCoords, pathLineNextToDoorCoords);  // 1 - left-connected; 0 - right-connected
+
+		let freeX, freeY; // intersectionCoords - free end
+
+		if(doorConnectionStatus == 1) { // if so - search for right end intersection
+			freeX = lineCoords.x2;
+			freeY = lineCoords.y2;
+		} else {
+			freeX = lineCoords.x1;
+			freeY = lineCoords.y1;
+		}
+
+
+
+		for(let i = 0; i < rooms.length; i++) {
+			if(rooms[i].nodeType == 3) continue; // Text nodes are being skipped
+
+			if(rooms[i].childNodes[1] != null) {
+				let bbox = rooms[i].childNodes[1].getBBox();
+				if((freeX >= bbox.x && freeX <= bbox.x + bbox.width) && (freeY >= bbox.y && freeY <= bbox.y + bbox.height)) {
+					console.log("CONNECTING DOOR ");
+					console.log(doors[j]);
+					console.log("TO ROOM:");
+					console.log(rooms[i]);
+				}
+			}
+		}
+	}
 }
