@@ -63,6 +63,24 @@ for (var i = 0; i < childNodes.length; i++) {
 	}
 }
 
+var updateLines = function () {
+	paths = document.getElementById("Paths").childNodes;
+	doors = document.getElementById("Doors").childNodes;
+	portals = document.getElementById("Portals").childNodes;
+
+	childNodes = Array.prototype.slice.call(paths);
+	childNodes = childNodes.concat(Array.prototype.slice.call(doors));
+	childNodes = childNodes.concat(Array.prototype.slice.call(portals));
+
+	lines = [];
+
+	for (var i = 0; i < childNodes.length; i++) {
+		if (childNodes[i].nodeName == "line") {
+			lines.push(childNodes[i]);
+		}
+	}
+}
+
 var length = function (coords) {
 	return distance(coords.x1, coords.y1, coords.x2, coords.y2);
 }
@@ -162,6 +180,8 @@ var idNotDefinedErrorWasShown = false;
 var noWaysErrorWasShown = false;
 var noLengthErrorWasShown = false;
 
+var needWaysRedefineAndLinesArrayUpdate = false;
+
 console.log("-----VALIDATION STARTED---------");
 
 console.log("Lines:");
@@ -247,6 +267,59 @@ for (var i = 0; i < lines.length; i++) {
 		console.log(lines[i]);
 	}
 
+
+	if (getTypeOfLine(lines[i]) == "Door" && lines[i].getAttribute("ways") != null && lines[i].getAttribute("ways").includes(",")) {
+		console.log("-------------------------------------");
+		actions.push(
+			{
+				prop: lines[i],
+				type: "door-multiple-connections",
+				exec: function () {
+					let lineCoords = getXAndYByHTML(this.prop);
+					lineCoords.x1 = Number(lineCoords.x1);
+					lineCoords.y1 = Number(lineCoords.y1);
+					lineCoords.x2 = Number(lineCoords.x2);
+					lineCoords.y2 = Number(lineCoords.y2);
+
+					let pathLineNextToDoorCoords = getXAndYByHTML(getLineById(this.prop.getAttribute("ways").split(",")[0]));
+
+					let doorConnectionStatus = areLinesConnected(lineCoords, pathLineNextToDoorCoords);  // 1 - left-connected; 0 - right-connected
+
+					let connectionX, connectionY; // Coordinates on which door is connected to multiple paths
+
+					let midX = (lineCoords.x1 + lineCoords.x2) / 2.0;
+					let midY = (lineCoords.y1 + lineCoords.y2) / 2.0;
+
+					if (doorConnectionStatus == 1) {
+						connectionX = lineCoords.x1;
+						connectionY = lineCoords.y1;
+
+						this.prop.setAttribute("x1", midX);
+						this.prop.setAttribute("y1", midY);
+					} else {
+						connectionX = lineCoords.x2;
+
+						this.prop.setAttribute("x2", midX);
+						this.prop.setAttribute("y2", midY);
+					}
+
+					var newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+					newLine.setAttribute('id', 'doorline' + i);
+					newLine.setAttribute('x1', midX);
+					newLine.setAttribute('y1', midY);
+					newLine.setAttribute('x2', connectionX);
+					newLine.setAttribute('y2', connectionY);
+					newLine.setAttribute("stroke", "black");
+
+					document.getElementById("Paths").appendChild(newLine);
+				}
+			}
+		)
+		needWaysRedefineAndLinesArrayUpdate = true; // To redefine ways again because connections were modified. 
+		console.log("Door multiple connections. Action id: " + String(actions.length - 1) + ". Line: ");
+		console.log(lines[i]);
+	}
+
 	if (lines[i].id == "" && !idNotDefinedErrorWasShown) {
 		console.log("-------------------------------------");
 		actions.push(
@@ -261,7 +334,7 @@ for (var i = 0; i < lines.length; i++) {
 		idNotDefinedErrorWasShown = true;
 	}
 
-	if (lines[0].getAttribute("ways") == null && !noWaysErrorWasShown) {
+	if (lines[i].getAttribute("ways") == null && !noWaysErrorWasShown) {
 		console.log("-------------------------------------");
 		actions.push(
 			{
@@ -289,6 +362,7 @@ for (var i = 0; i < lines.length; i++) {
 	}
 }
 
+
 var rooms = Array.prototype.slice.call(document.getElementById("Rooms").childNodes);
 
 for (var i = 0; i < rooms.length; i++) {
@@ -311,6 +385,20 @@ for (var i = 0; i < rooms.length; i++) {
 	}
 }
 
+if(needWaysRedefineAndLinesArrayUpdate) {
+	console.log("-------------------------------------");
+		actions.push(
+			{
+				type: "need-line-array-update-and-ways-redef",
+				exec: function () {
+					updateLines();
+					predefineConnections();
+				}
+			}
+		);
+		noLengthErrorWasShown = true;
+		console.log("Some lines don't have predefined lengths. Action id: " + String(actions.length - 1));
+}
 
 console.log("-----VALIDATION-IS-OVER---------");
 console.log("Errors counter: " + actions.length);
@@ -348,6 +436,15 @@ runAllActions = function () {
 
 			actions[i].exec();
 			console.log("Lengths were generated for every line.");
+			console.log("-------------------------------------");
+		} else if (actions[i].type == "door-multiple-connections") {
+			actions[i].exec();
+			console.log("Door line was splitted:");
+			console.log(actions[i].prop);
+			console.log("-------------------------------------");
+		} else if(actions[i].type == "need-line-array-update-and-ways-redef") {
+			actions[i].exec();
+			console.log("Lines array was updated and ways were generated for every line.");
 			console.log("-------------------------------------");
 		}
 	}
@@ -703,7 +800,7 @@ var unred = function () {
 	for (let i = 0; i < lines.length; i++) {
 		if (lines[i].getAttribute("stroke") != null) {
 			let newColor = "";
-			
+
 			switch (getTypeOfLine(lines[i])) {
 				case "Door":
 					newColor = "#00FF00";
@@ -759,16 +856,16 @@ var moveRoomsToSeparateLayer = function (prefixes, roomsIndex, rooms, curPrefix)
 }
 
 
-var nameDoorsAccordingToRoomNames = function() {
+var nameDoorsAccordingToRoomNames = function () {
 	let rooms = document.getElementById("Rooms").childNodes;
 	let doors = document.getElementById("Doors").childNodes;
 
-	for(let j = 0; j < doors.length; j++) {
-		if(doors[j].nodeType == 3) continue; // Text nodes are being skipped
+	for (let j = 0; j < doors.length; j++) {
+		if (doors[j].nodeType == 3) continue; // Text nodes are being skipped
 
 		let lineCoords = getXAndYByHTML(doors[j]);
 
-		if(doors[j].getAttribute("ways") == "" || doors[j].getAttribute("ways") == null) {
+		if (doors[j].getAttribute("ways") == "" || doors[j].getAttribute("ways") == null) {
 			console.error("Door doesn't have ways:");
 			console.error(doors[j]);
 			return;
@@ -780,7 +877,7 @@ var nameDoorsAccordingToRoomNames = function() {
 
 		let freeX, freeY; // intersectionCoords - free end
 
-		if(doorConnectionStatus == 1) { // if so - search for right end intersection
+		if (doorConnectionStatus == 1) { // if so - search for right end intersection
 			freeX = lineCoords.x2;
 			freeY = lineCoords.y2;
 		} else {
@@ -790,12 +887,12 @@ var nameDoorsAccordingToRoomNames = function() {
 
 
 
-		for(let i = 0; i < rooms.length; i++) {
-			if(rooms[i].nodeType == 3) continue; // Text nodes are being skipped
+		for (let i = 0; i < rooms.length; i++) {
+			if (rooms[i].nodeType == 3) continue; // Text nodes are being skipped
 
-			if(rooms[i].childNodes[1] != null) {
+			if (rooms[i].childNodes[1] != null) {
 				let bbox = rooms[i].childNodes[1].getBBox();
-				if((freeX >= bbox.x && freeX <= bbox.x + bbox.width) && (freeY >= bbox.y && freeY <= bbox.y + bbox.height)) {
+				if ((freeX >= bbox.x && freeX <= bbox.x + bbox.width) && (freeY >= bbox.y && freeY <= bbox.y + bbox.height)) {
 					console.log("CONNECTING DOOR ");
 					console.log(doors[j]);
 					console.log("TO ROOM:");
