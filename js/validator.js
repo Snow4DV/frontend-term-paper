@@ -304,7 +304,7 @@ for (var i = 0; i < lines.length; i++) {
 					}
 
 					var newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-					newLine.setAttribute('id', 'doorline' + i);
+					newLine.setAttribute('id', 'doorline' + this.prop.id);
 					newLine.setAttribute('x1', midX);
 					newLine.setAttribute('y1', midY);
 					newLine.setAttribute('x2', connectionX);
@@ -393,6 +393,7 @@ if(needWaysRedefineAndLinesArrayUpdate) {
 				exec: function () {
 					updateLines();
 					predefineConnections();
+					predefineLengths();
 				}
 			}
 		);
@@ -573,7 +574,10 @@ var createGraph = function () {
 		console.log("PATH: ");
 		console.log(path);
 
-		let polyline = document.getElementById("result-polyline");
+		let polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+		polyline.setAttributeNS(null, "stroke-width", 2);
+		polyline.setAttributeNS(null, "stroke", "red");
+		polyline.setAttributeNS(null, "fill", "none");
 
 		let points = "";
 
@@ -581,6 +585,8 @@ var createGraph = function () {
 			points += " " + path[i].x + ", " + path[i].y;
 		}
 		polyline.setAttribute("points", points.substring(1));
+
+		document.getElementById("Rooms").parentNode.appendChild(polyline);
 
 	}
 }
@@ -871,6 +877,8 @@ var nameDoorsAccordingToRoomNames = function () {
 			return;
 		}
 
+
+		console.log(doors[j]);
 		let pathLineNextToDoorCoords = getXAndYByHTML(getLineById(doors[j].getAttribute("ways")));
 
 		let doorConnectionStatus = areLinesConnected(lineCoords, pathLineNextToDoorCoords);  // 1 - left-connected; 0 - right-connected
@@ -893,12 +901,15 @@ var nameDoorsAccordingToRoomNames = function () {
 			if (rooms[i].childNodes[1] != null) {
 				let bbox = rooms[i].childNodes[1].getBBox();
 				if ((freeX >= bbox.x && freeX <= bbox.x + bbox.width) && (freeY >= bbox.y && freeY <= bbox.y + bbox.height)) {
-					console.log("CONNECTING DOOR ");
+					console.log("Connecting door: ");
 					console.log(doors[j]);
-					console.log("TO ROOM:");
+					console.log("To room:");
 					console.log(rooms[i]);
+					doors[j].setAttribute("id", rooms[i].getAttribute("id"));
+					console.log("---------------------------------");
 				}
 			}
 		}
 	}
 }
+
