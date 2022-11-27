@@ -798,7 +798,7 @@ var roomUpdateFunc = function (shape, title, rooms, index, nextCall, oldClass) {
 }
 
 var moveRoomsAction = function () {
-	moveRoomsToSeparateLayer(["aud", "wc", "din"]);
+	moveRoomsToSeparateLayer(["aud", "wc", "din", "gym"]);
 }
 
 
