@@ -2284,31 +2284,31 @@
 	<line id="B-304" class="f224" x1="2361" y1="190.8" x2="2386.8" y2="190.8" ways="line410-floor2" length="25.800000000000182"/>
 </g>
 <g id="Portals">
-	<line id="f2air.8.floor2" class="f225" x1="1271" y1="233.5" x2="1333.8" y2="233.5" ways="line21-floor2,line22-floor2" length="62.799999999999955"/>
-	<line id="f2air.1.floor2" class="f225" x1="836" y1="233.7" x2="777.6" y2="233.7" ways="line201-floor2,line202-floor2" length="58.39999999999998"/>
-	<line id="f2air.2.floor2" class="f226" x1="1055.8" y1="494" x2="1055.8" y2="470.2" ways="line34-floor2" length="23.80000000000001"/>
-	<line id="f2air.9.floor2" class="f225" x1="1558.2" y1="234" x2="1503.5" y2="234" ways="line170-floor2,line171-floor2" length="54.700000000000045"/>
-	<line id="f2air.10.floor2" class="f225" x1="1835.8" y1="229" x2="1886.5" y2="229" ways="line185-floor2,line186-floor2" length="50.700000000000045"/>
-	<line id="f2air.11.floor2" class="f225" x1="1693.5" y1="521.8" x2="1693.5" y2="477.5" ways="line157-floor2,line158-floor2,line161-floor2" length="44.299999999999955"/>
-	<line id="f2air.12.floor2" class="f225" x1="2210.9" y1="521.8" x2="2210.9" y2="480.1" ways="line132-floor2,line133-floor2,line145-floor2" length="41.69999999999993"/>
-	<line id="f2air.13.floor2" class="f225" x1="2067.9" y1="233.9" x2="2005.9" y2="233.9" ways="line205-floor2,line206-floor2" length="62"/>
-	<line id="f2air.14.floor2" class="f225" x1="2346.9" y1="233.5" x2="2389.7" y2="233.5" ways="line142-floor2,line143-floor2" length="42.79999999999973"/>
-	<line id="f2air.3.floor2" class="f225" x1="2592.3" y1="234" x2="2548.6" y2="234" ways="line127-floor2,line128-floor2" length="43.70000000000027"/>
-	<line id="f2air.4.floor2" class="f225" x1="2871" y1="231.3" x2="2926.8" y2="231.3" ways="line115-floor2,line116-floor2" length="55.80000000000018"/>
-	<line id="f2air.5.floor2" class="f225" x1="2731" y1="524.6" x2="2731" y2="478.7" ways="line104-floor2,line105-floor2,line120-floor2" length="45.900000000000034"/>
-	<line id="f2air.6.floor2" class="f225" x1="1396" y1="788.3" x2="1484.3" y2="788.3" ways="line200-floor2,Stair.7.floor2" length="88.29999999999995"/>
-	<line id="f2air.7.floor2" class="f225" x1="1396" y1="788.3" x2="1341.1" y2="788.3" ways="line200-floor2,Stair.6.floor2" length="54.90000000000009"/>
-	<line id="f2air.15.floor2" class="f225" x1="2111.1" y1="841.1" x2="2111.1" y2="883.3" ways="line91-floor2,line92-floor2" length="42.19999999999993"/>
-	<line id="f2air.16.floor2" class="f227" x1="1771.5" y1="841.1" x2="1770.9" y2="893.5" ways="line406-floor2,line407-floor2" length="52.40343500191564"/>
-	<line id="f2air.17.floor2" class="f226" x1="1026" y1="849" x2="1021" y2="881.8" ways="line47-floor2,line48-floor2" length="33.178908963376074"/>
-	<line id="f2air.18.floor2" class="f225" x1="680.9" y1="849" x2="680.9" y2="885.3" ways="line52-floor2,line53-floor2" length="36.299999999999955"/>
-	<line id="f2air.19.floor2" class="f225" x1="307.1" y1="849" x2="307.1" y2="878.6" ways="line58-floor2,line59-floor2,doorline171-floor2" length="29.600000000000023"/>
-	<line id="f2air.20.floor2" class="f225" x1="24.9" y1="849" x2="24.9" y2="885.8" ways="line66-floor2,doorline164-floor2" length="36.799999999999955"/>
-	<line id="f2air.21.floor2" class="f225" x1="563.6" y1="1082.7" x2="632.2" y2="1082.7" ways="line188-floor2,Stair.22.floor2" length="68.60000000000002"/>
-	<line id="f2air.22.floor2" class="f225" x1="563.6" y1="1082.7" x2="503" y2="1082.7" ways="line188-floor2,Stair.21.floor2" length="60.60000000000002"/>
-	<line id="f2air.23.floor2" class="f225" x1="1191.7" y1="1049" x2="1191.7" y2="1082.6" ways="line77-floor2,doorline182-floor2" length="33.59999999999991"/>
-	<line id="f2air.24.floor2" class="f225" x1="1582.5" y1="1049" x2="1582.5" y2="1080.1" ways="line73-floor2,line74-floor2,doorline180-floor2" length="31.09999999999991"/>
-	<line id="f2air.25.floor2" class="f225" x1="2486" y1="842.5" x2="2486" y2="890.2" ways="line203-floor2,line204-floor2" length="47.700000000000045"/>
+	<line id="Stair.8.floor2" class="f225" x1="1271" y1="233.5" x2="1333.8" y2="233.5" ways="line21-floor2,line22-floor2" length="62.799999999999955"/>
+	<line id="Stair.1.floor2" class="f225" x1="836" y1="233.7" x2="777.6" y2="233.7" ways="line201-floor2,line202-floor2" length="58.39999999999998"/>
+	<line id="Stair.2.floor2" class="f226" x1="1055.8" y1="494" x2="1055.8" y2="470.2" ways="line34-floor2" length="23.80000000000001"/>
+	<line id="Stair.9.floor2" class="f225" x1="1558.2" y1="234" x2="1503.5" y2="234" ways="line170-floor2,line171-floor2" length="54.700000000000045"/>
+	<line id="Stair.10.floor2" class="f225" x1="1835.8" y1="229" x2="1886.5" y2="229" ways="line185-floor2,line186-floor2" length="50.700000000000045"/>
+	<line id="Stair.11.floor2" class="f225" x1="1693.5" y1="521.8" x2="1693.5" y2="477.5" ways="line157-floor2,line158-floor2,line161-floor2" length="44.299999999999955"/>
+	<line id="Stair.12.floor2" class="f225" x1="2210.9" y1="521.8" x2="2210.9" y2="480.1" ways="line132-floor2,line133-floor2,line145-floor2" length="41.69999999999993"/>
+	<line id="Stair.13.floor2" class="f225" x1="2067.9" y1="233.9" x2="2005.9" y2="233.9" ways="line205-floor2,line206-floor2" length="62"/>
+	<line id="Stair.14.floor2" class="f225" x1="2346.9" y1="233.5" x2="2389.7" y2="233.5" ways="line142-floor2,line143-floor2" length="42.79999999999973"/>
+	<line id="Stair.3.floor2" class="f225" x1="2592.3" y1="234" x2="2548.6" y2="234" ways="line127-floor2,line128-floor2" length="43.70000000000027"/>
+	<line id="Stair.4.floor2" class="f225" x1="2871" y1="231.3" x2="2926.8" y2="231.3" ways="line115-floor2,line116-floor2" length="55.80000000000018"/>
+	<line id="Stair.5.floor2" class="f225" x1="2731" y1="524.6" x2="2731" y2="478.7" ways="line104-floor2,line105-floor2,line120-floor2" length="45.900000000000034"/>
+	<line id="Stair.6.floor2" class="f225" x1="1396" y1="788.3" x2="1484.3" y2="788.3" ways="line200-floor2,Stair.7.floor2" length="88.29999999999995"/>
+	<line id="Stair.7.floor2" class="f225" x1="1396" y1="788.3" x2="1341.1" y2="788.3" ways="line200-floor2,Stair.6.floor2" length="54.90000000000009"/>
+	<line id="Stair.15.floor2" class="f225" x1="2111.1" y1="841.1" x2="2111.1" y2="883.3" ways="line91-floor2,line92-floor2" length="42.19999999999993"/>
+	<line id="Stair.16.floor2" class="f227" x1="1771.5" y1="841.1" x2="1770.9" y2="893.5" ways="line406-floor2,line407-floor2" length="52.40343500191564"/>
+	<line id="Stair.17.floor2" class="f226" x1="1026" y1="849" x2="1021" y2="881.8" ways="line47-floor2,line48-floor2" length="33.178908963376074"/>
+	<line id="Stair.18.floor2" class="f225" x1="680.9" y1="849" x2="680.9" y2="885.3" ways="line52-floor2,line53-floor2" length="36.299999999999955"/>
+	<line id="Stair.19.floor2" class="f225" x1="307.1" y1="849" x2="307.1" y2="878.6" ways="line58-floor2,line59-floor2,doorline171-floor2" length="29.600000000000023"/>
+	<line id="Stair.20.floor2" class="f225" x1="24.9" y1="849" x2="24.9" y2="885.8" ways="line66-floor2,doorline164-floor2" length="36.799999999999955"/>
+	<line id="Stair.21.floor2" class="f225" x1="563.6" y1="1082.7" x2="632.2" y2="1082.7" ways="line188-floor2,Stair.22.floor2" length="68.60000000000002"/>
+	<line id="Stair.22.floor2" class="f225" x1="563.6" y1="1082.7" x2="503" y2="1082.7" ways="line188-floor2,Stair.21.floor2" length="60.60000000000002"/>
+	<line id="Stair.23.floor2" class="f225" x1="1191.7" y1="1049" x2="1191.7" y2="1082.6" ways="line77-floor2,doorline182-floor2" length="33.59999999999991"/>
+	<line id="Stair.24.floor2" class="f225" x1="1582.5" y1="1049" x2="1582.5" y2="1080.1" ways="line73-floor2,line74-floor2,doorline180-floor2" length="31.09999999999991"/>
+	<line id="Stair.25.floor2" class="f225" x1="2486" y1="842.5" x2="2486" y2="890.2" ways="line203-floor2,line204-floor2" length="47.700000000000045"/>
 </g>
 <script href="../js/validator.js"/>
 <g id="BaseTop">

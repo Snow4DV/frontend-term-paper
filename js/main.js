@@ -12,3 +12,32 @@ var setVisibleFloor = function(floorId) {
         }
     }
 }
+
+
+
+var predefinePortalWays = function() {
+    for(let i = 0; i < floors.length; i++) {
+        let floorContainer = document.getElementById(floors[i] + "-container");
+        let portals = floorContainer.querySelectorAll("#Portals>*");
+        for(let j = 0; j < portals.length; j++) {
+            let splitPortalId = portals[j].id.split(".");
+            let portalWays = portals[j].getAttribute("ways");
+            console.log("----------SEARCHING FOR WAYS-----------");
+            console.log("Portal:");
+            console.log(portals[j]);
+            for(let k = 0; k < floors.length; k++) {
+                let checkFloorContainer = document.getElementById(floors[k] + "-container");
+                let portalOnAnotherFloor = checkFloorContainer. querySelector("#Portals>#" + splitPortalId[0] + "\\." + splitPortalId[1] + "\\." + floors[k]);
+
+                if(portalOnAnotherFloor != null) {
+                    portalWays += "," + splitPortalId[0] + "\\." + splitPortalId[1] + "\\." + floors[k];
+                    console.log("Connected to:");
+                    console.log(portalOnAnotherFloor);
+                }
+            }
+
+            portals[j].setAttribute("ways", portalWays);
+            
+        }
+    }
+}
