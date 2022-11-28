@@ -46,3 +46,31 @@ var predefinePortalWays = function(floorId) {
     }
 }
 
+var unheckWays = function() { // Removes repeating and same-to-origin IDs in ways attribute. Debug purposes only.
+    let lines = document.querySelectorAll("line");
+    for(let i = 0; i < lines.length; i++) {
+        let ways = lines[i].getAttribute("ways");
+        if(ways != null) {
+            ways = ways.split(",");
+        } else {
+            continue;
+        }
+        let newWays = [];
+        if(ways != null) {
+            for(let j = 0; j < ways.length; j++) {
+                if(!newWays.includes(ways[j]) && ways[j] != lines[i].id) { 
+                    newWays.push(ways[j]);
+                }
+            }
+        }
+
+        let newWaysString = "";
+        for(let j = 0; j < newWays.length; j++) {
+            newWaysString += ((j == 0) ? "" : ",") + newWays[j];
+        }
+
+        lines[i].setAttribute("ways", newWaysString);
+    }
+}
+
+
