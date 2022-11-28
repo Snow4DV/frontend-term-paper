@@ -135,7 +135,7 @@ WayFinder = {
             {
                 x: (startConnectionStatus == 1) ? startLineCoords.x2 : startLineCoords.x1,
                 y: (startConnectionStatus == 1) ? startLineCoords.y2 : startLineCoords.y1,
-                floor: document.getElementById(startId).parentNode.parentNode.id
+                floor: document.getElementById(startId).parentNode.parentNode.parentNode.id
             }
         );
 
@@ -156,7 +156,7 @@ WayFinder = {
             {
                 x: (endConnectionStatus == 1) ? endLineCoords.x2 : endLineCoords.x1,
                 y: (endConnectionStatus == 1) ? endLineCoords.y2 : endLineCoords.y1,
-                floor: document.getElementById(endId).parentNode.parentNode.id
+                floor: document.getElementById(endId).parentNode.parentNode.parentNode.id
             }
         );
 
@@ -185,7 +185,7 @@ WayFinder = {
         for(let i = 0; i < resultWayKeys.length; i++) {
             let floor = resultWayKeys[i];
             let polyline = resultWay[floor];
-            document.getElementById(floor).appendChild(polyline);
+            document.getElementById(floor + "-g").appendChild(polyline);
         }
 
 
@@ -384,3 +384,5 @@ class PriorityQueue {
         return (this.collection.length === 0)
     };
 }
+
+
