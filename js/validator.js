@@ -913,3 +913,12 @@ var nameDoorsAccordingToRoomNames = function () {
 	}
 }
 
+var appendFloorNameToPaths = function() {
+	let floor = lines[0].parentElement.parentElement.id;
+	for(let i = 0; i < paths.length; i++) {
+		if(paths[i].id != null) {
+			paths[i].setAttribute("id", paths[i].getAttribute("id") + "-" + floor);
+		}
+	}
+	predefineConnections(); // Redefine connections after id changes
+}
