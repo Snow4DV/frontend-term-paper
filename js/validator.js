@@ -922,3 +922,12 @@ var appendFloorNameToPaths = function() {
 	}
 	predefineConnections(); // Redefine connections after id changes
 }
+
+var uniqueRoomGroupNames = function() {
+	let floor = lines[0].parentElement.parentElement.id;
+	for(let i = 0; i < rooms.length; i++) {
+		if(rooms[i].id != null) {
+			rooms[i].setAttribute("id", rooms[i].getAttribute("id") + "-" + floor);
+		}
+	}
+}
