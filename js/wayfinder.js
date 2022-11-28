@@ -1,12 +1,76 @@
+
 WayFinder = {
+    floors: ["floor0", "floor1", "floor2", "floor3", "floor4"],
+    compareFloors: function(floor1, floor2) {
+        let floor1Number = floor1.replace(/\D/g,"");
+        let floor2Number = floor1.replace(/\D/g,"");
+        return floor1Number - floor2Number; // if (==0) then floors equal. if (>0) then floor1 is greater. if(<0) then floor1 is smaller
+    },
+    getLinesForFloor: function(floor) {
+        let paths = document.getElementById(floor + "-container").querySelectorAll("#Paths>*");
+        let doors = document.getElementById(floor + "-container").querySelectorAll("#Doors>*");
+        let portals = document.getElementById(floor + "-container").querySelectorAll("#Portals>*");
+        
+        let childNodes = Array.prototype.slice.call(paths);
+        childNodes = childNodes.concat(Array.prototype.slice.call(doors));
+        childNodes = childNodes.concat(Array.prototype.slice.call(portals));
+        
+        let lines = [];
+        
+        for (let i = 0; i < childNodes.length; i++) { // To skip anything but lines 
+            if (childNodes[i].nodeName == "line") {
+                lines.push(childNodes[i]);
+            }
+        }
+        return lines;
+    },
+    distance: function (x1, y1, x2, y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    },
+    isPortalOrDoor: function (node) {
+        return node.parentElement.id == "Doors" || node.parentElement.id == "Portals";
+    },
+    getXAndYByHTML: function (node) {
+        var result = { x1: null, y1: null, x2: null, y2: null };
+        for (var attr = 0; attr < node.attributes.length; attr++) {
+            if (Object.keys(result).includes(node.attributes[attr].localName)) {
+                result[node.attributes[attr].localName] = node.attributes[attr].nodeValue;
+            }
+        }
+        return result;
+    },
+    getTypeOfLine: function (node) {
+        let type = node.parentElement.id;
+        return type.substring(0, type.length - 1);
+    },
     createGraph: function () {
         this.graph = new Graph();
-        for (let i = 0; i < lines.length; i++) {
-            if (!isPortalOrDoor(lines[i])) {
-                let coords = getXAndYByHTML(lines[i]);
-                this.graph.addLine(coords.x1, coords.y1, lines[i].id, coords.x2, coords.y2);
-            }
 
+        for(let i = 0; i < this.floors.length; i++) {
+            let floor = this.floors[i];
+            let floorLines = this.getLinesForFloor(floor);
+            for(let j = 0; j < floorLines.length; j++) {
+                if(this.getTypeOfLine(floorLines[j]) == "Path") {
+                    let coords = this.getXAndYByHTML(floorLines[j]);
+                    this.graph.addLine(coords.x1, coords.y1, floorLines[j].id, coords.x2, coords.y2, floor, floor);
+                } else if(this.getTypeOfLine(floorLines[j]) == "Portal") {
+                    let coords = this.getXAndYByHTML(floorLines[j]);
+                    let portalWays = floorLines[j].getAttribute("ways").split(",");
+                    this.graph.addLine(coords.x1, coords.y1, floorLines[j].id, coords.x2, coords.y2, floor, floor); // At first we add portal line itself
+                    for(let k = 0; k < portalWays.length; k++) {
+                        let dstPortal = document.querySelector("#" + portalWays[k]); 
+                        console.log("Searched for " + portalWays[k]);
+                        console.log(dstPortal);
+                        let dstCoords = this.getXAndYByHTML(dstPortal);
+
+                        if(this.compareFloors(floorLines[j].id, dstPortal.id) > 0) {
+                            this.graph.addLine(coords.x2, coords.y2, floorLines[j].id + "-to-" + dstPortal.id, dstCoords.x1, dstCoords.y1, floor, portalWays[k].split(".")[2]); // Fake line between portals. It's a portal between floors so it will not be drawn
+                            // Note that it will be added only once because of the comparison. [btw it is newer zero because zero will not be passed]
+                        }
+                        
+                    }
+                }
+            }
         }
     },
     findPath: function (startId, endId) {
@@ -109,7 +173,7 @@ class GraphNode {
     }
 
     key() {
-        return JSON.stringify({ x: this.x, y: this.y });
+        return JSON.stringify({ x: this.x, y: this.y, floor: this.floor });
     }
 
 
@@ -125,7 +189,7 @@ class Graph {
     addLine(x, y, id, conX, conY, floor1, floor2) {
         let node1 = this.addNode(x, y, id, floor1);
         let node2 = this.addNode(conX, conY, id, floor2);
-        this.addEdge(node1, node2, distance(x, y, conX, conY));
+        this.addEdge(node1, node2, WayFinder.distance(x, y, conX, conY));
     }
 
     addNode(x, y, id, floor) {
