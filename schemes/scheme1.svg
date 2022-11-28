@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Слой_1" x="0px" y="0px" viewBox="0 0 2972 1245" style="enable-background:new 0 0 2972 1245;" xml:space="preserve">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="floor1" x="0px" y="0px" viewBox="0 0 2972 1245" style="enable-background:new 0 0 2972 1245;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#AAAAAA;stroke:#000000;stroke-miterlimit:10;}
 	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#F9F9F9;}
@@ -23,7 +23,6 @@
 	.st20{font-size:14.0998px;}
 </style>
 <g id="Base_00000156563028200974865230000011188173164717341062_">
-	<rect x="-59.8" y="-63.6" class="st0" width="3422.8" height="1523.9"/>
 	<g id="Base">
 		<g>
 			<path id="path3853-7-8" class="st1" d="M2962.7,606.7c2.8,0,5.1-0.3,5.1-0.6l0.2-546.4c0,0-2.5-0.1-5.3-0.1h-469.8     c-2.8,0-5,0.1-5,0.1l0.3,546.7c0,0.1,1.9,0.2,4.7,0.2L2962.7,606.7z M2609.1,225.3c0-2.8,2.3-5,5.1-5h227.3c2.8,0,5.1,2.2,5.1,5     v215.8c0,2.8-2.3,5-5.1,5h-227.3c-2.8,0-5.1-2.2-5.1-5V225.3z"/>
