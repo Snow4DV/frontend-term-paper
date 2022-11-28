@@ -134,7 +134,8 @@ WayFinder = {
         path.push(
             {
                 x: (startConnectionStatus == 1) ? startLineCoords.x2 : startLineCoords.x1,
-                y: (startConnectionStatus == 1) ? startLineCoords.y2 : startLineCoords.y1
+                y: (startConnectionStatus == 1) ? startLineCoords.y2 : startLineCoords.y1,
+                floor: document.getElementById(startId).parentNode.parentNode.id
             }
         );
 
@@ -144,7 +145,8 @@ WayFinder = {
             path.push(
                 {
                     x: pathNodes[i].x,
-                    y: pathNodes[i].y
+                    y: pathNodes[i].y,
+                    floor: pathNodes[i].floor
                 }
             );
         }
@@ -153,30 +155,39 @@ WayFinder = {
         path.push(
             {
                 x: (endConnectionStatus == 1) ? endLineCoords.x2 : endLineCoords.x1,
-                y: (endConnectionStatus == 1) ? endLineCoords.y2 : endLineCoords.y1
+                y: (endConnectionStatus == 1) ? endLineCoords.y2 : endLineCoords.y1,
+                floor: document.getElementById(endId).parentNode.parentNode.id
             }
         );
 
         console.log("PATH: ");
         console.log(path);
 
-        let lines = {};
+        let resultWay = {};
 
-
-
-//        let polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-  //      polyline.setAttributeNS(null, "stroke-width", 2);
-   //     polyline.setAttributeNS(null, "stroke", "red");
-     //   polyline.setAttributeNS(null, "fill", "none");
-
-        let points = "";
 
         for (let i = 0; i < path.length; i++) {
             //points += " " + path[i].x + ", " + path[i].y;
+            if(!(path[i].floor in resultWay)) {
+                let polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                polyline.setAttributeNS(null, "stroke-width", 2);
+                polyline.setAttributeNS(null, "stroke", "red");
+                polyline.setAttributeNS(null, "fill", "none");
+                polyline.setAttribute("points", " " + path[i].x + ", " + path[i].y);
+                resultWay[path[i].floor] = polyline;
+            } else {
+                resultWay[path[i].floor].setAttribute("points", resultWay[path[i].floor].getAttribute("points") + " " + path[i].x + ", " + path[i].y);
+            }
         }
-        //polyline.setAttribute("points", points.substring(1));
 
-        //document.getElementById("Rooms").parentNode.appendChild(polyline);
+        let resultWayKeys = Object.keys(resultWay);
+
+        for(let i = 0; i < resultWayKeys.length; i++) {
+            let floor = resultWayKeys[i];
+            let polyline = resultWay[floor];
+            document.getElementById(floor).appendChild(polyline);
+        }
+
 
     }
 }
