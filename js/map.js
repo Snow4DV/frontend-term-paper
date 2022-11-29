@@ -17,7 +17,7 @@ var setVisibleFloor = function (floorId) {
 }
 
 let map = document.getElementById("maps");
-let isMouseDown = false;
+let isMouseOrFingerDown = false;
 let previousMouseMove = null;
 
 let translate = { x: 0, y: 0 };
@@ -26,17 +26,30 @@ let scale = { x: 1, y: 1 };
 let currentFloorG = document.getElementById(currentFloorId + "-g");
 
 map.onmousedown = function () {
-    isMouseDown = true;
+    isMouseOrFingerDown = true;
 }
 map.onmouseup = function () {
-    isMouseDown = false;
+    isMouseOrFingerDown = false;
 }
 map.onmouseleave = function () {
-    isMouseDown = false;
+    isMouseOrFingerDown = false;
 }
 
+map.ontouchstart = function() {
+    isMouseOrFingerDown = true;
+}
+
+map.ontouchend = function () {
+    isMouseOrFingerDown = false;
+}
+
+map.ontouchcancel = function () {
+    isMouseOrFingerDown = false;
+}
+
+
 map.onmousemove = function (event) {
-    if (isMouseDown && previousMouseMove != null) {
+    if (isMouseOrFingerDown && previousMouseMove != null) {
         let deltaX = event.x - previousMouseMove.x;
         let deltaY = event.y - previousMouseMove.y;
 
@@ -47,6 +60,7 @@ map.onmousemove = function (event) {
     }
     previousMouseMove = event;
 }
+map.ontouchmove = map.onmousemove;
 
 let updateTransform = function () {
     currentFloorG.setAttribute("transform", "translate(" + translate.x + "," + translate.y + ") scale(" + scale.x + "," + scale.y + ")");
