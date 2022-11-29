@@ -33,6 +33,9 @@ map.onmousedown = function() {
 map.onmouseup= function() {
     isMouseDown = false;
 }
+map.onmouseleave= function() {
+    isMouseDown = false;
+}
 
 map.onmousemove= function(event) {
     if(isMouseDown && previousMouseMove != null) {
@@ -53,7 +56,7 @@ let updateTransform = function() {
 
 
 let updateSvgViewport = function() {
-    let mapSvgs = document.querySelectorAll("svg");
+    let mapSvgs = document.querySelectorAll("#maps > * > svg");
     for(let i = 0; i < mapSvgs.length; i++) {
         mapSvgs[i].setAttribute("viewBox","0 0 " + window.innerWidth + " " + window.innerHeight);
     }
@@ -80,6 +83,33 @@ let init = function() {
         updateTransform();
         return false; 
     }, false);
+
+
+    for(let i = 0; i < floors.length; i++) {
+        let button = document.getElementById(floors[i] + "-button");
+        button.addEventListener("click", (function(floorId, button) {
+            setVisibleFloor(floorId);
+            document.getElementsByClassName("active-fbutton")[0].setAttribute("class", "fbutton");
+            button.setAttribute("class", "active-fbutton");
+        }).bind(null, floors[i], button));
+    }
+
+    document.getElementById("down-floor-button").addEventListener("click", function() {
+        let newFloorIndex = floors.indexOf(currentFloorId) + 1;
+        if(newFloorIndex < 0) newFloorIndex = 0;
+        if(newFloorIndex > floors.length - 1) newFloorIndex = floors.length - 1;
+        setVisibleFloor(floors[newFloorIndex]);
+        document.getElementsByClassName("active-fbutton")[0].setAttribute("class", "fbutton");
+        document.getElementById(floors[newFloorIndex] + "-button").setAttribute("class", "active-fbutton");
+    });
+    document.getElementById("up-floor-button").addEventListener("click", function() {
+        let newFloorIndex = floors.indexOf(currentFloorId) - 1;
+        if(newFloorIndex < 0) newFloorIndex = 0;
+        if(newFloorIndex > floors.length - 1) newFloorIndex = floors.length - 1;
+        setVisibleFloor(floors[newFloorIndex]);
+        document.getElementsByClassName("active-fbutton")[0].setAttribute("class", "fbutton");
+        document.getElementById(floors[newFloorIndex] + "-button").setAttribute("class", "active-fbutton");
+    });
 }
 
 let onResize = function() {
@@ -88,3 +118,4 @@ let onResize = function() {
 
 window.addEventListener('load', init);
 window.addEventListener('resize', onResize);
+
