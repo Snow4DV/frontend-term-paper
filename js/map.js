@@ -110,6 +110,10 @@ let init = function() {
         document.getElementsByClassName("active-fbutton")[0].setAttribute("class", "fbutton");
         document.getElementById(floors[newFloorIndex] + "-button").setAttribute("class", "active-fbutton");
     });
+    WayFinder.createGraph();
+
+
+    document.getElementById("")
 }
 
 let onResize = function() {
