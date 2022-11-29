@@ -18,7 +18,7 @@ var setVisibleFloor = function (floorId) {
 
 let map = document.getElementById("maps");
 let isMouseOrFingerDown = false;
-let previousMouseMove = null;
+let previousMouseOrFingerMove = null;
 
 let translate = { x: 0, y: 0 };
 let scale = { x: 1, y: 1 };
@@ -41,26 +41,38 @@ map.ontouchstart = function() {
 
 map.ontouchend = function () {
     isMouseOrFingerDown = false;
+    previousMouseOrFingerMove = null;
 }
 
 map.ontouchcancel = function () {
     isMouseOrFingerDown = false;
+    previousMouseOrFingerMove = null;
 }
 
 
 map.onmousemove = function (event) {
-    if (isMouseOrFingerDown && previousMouseMove != null) {
-        let deltaX = event.x - previousMouseMove.x;
-        let deltaY = event.y - previousMouseMove.y;
+    if (isMouseOrFingerDown && previousMouseOrFingerMove != null) {
+        let deltaX = event.x - previousMouseOrFingerMove.x;
+        let deltaY = event.y - previousMouseOrFingerMove.y;
 
         translate.x += deltaX;
         translate.y += deltaY;
         updateTransform();
 
     }
-    previousMouseMove = event;
+    previousMouseOrFingerMove = event;
 }
-map.ontouchmove = map.onmousemove;
+map.ontouchmove = function (event) {
+    if (isMouseOrFingerDown && previousMouseOrFingerMove != null) {
+        let deltaX = event.touches[0].screenX - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenX : 0);
+        let deltaY = event.touches[0].screenY - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenY : 0);
+        translate.x += deltaX;
+        translate.y += deltaY;
+        updateTransform();
+
+    }
+    previousMouseOrFingerMove = event;
+}
 
 let updateTransform = function () {
     currentFloorG.setAttribute("transform", "translate(" + translate.x + "," + translate.y + ") scale(" + scale.x + "," + scale.y + ")");
@@ -190,7 +202,6 @@ var FloorMap = {
 
         for (let i = 0; i < roomsContainers.length; i++) {
             let roomIdSplit = roomsContainers[i].id.split("-");
-            console.log(roomIdSplit);
             let roomDoorId = "";
             let floor = "";
             for (let j = 0; j < roomIdSplit.length; j++) {

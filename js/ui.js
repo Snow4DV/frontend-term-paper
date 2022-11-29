@@ -1,9 +1,5 @@
 
 
-let uiInit = function() {
-    
-}
-window.addEventListener("load", uiInit);
 
 var autocomplete = function(input, roomsArray) {
     var currentFocus;
@@ -22,7 +18,6 @@ var autocomplete = function(input, roomsArray) {
         newDiv.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(newDiv);
         for (let i = 0; i < roomsArray.length; i++) {
-            console.log("Comp with "  + roomsArray[i].roomName.substr(0, currentValue.length).toUpperCase()  + ", res is " + (roomsArray[i].roomName.substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase() ? "TRUE" : "FALSE")) ;
           if (roomsArray[i].roomName.substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
             titleDiv = document.createElement("DIV");
             titleDiv.innerHTML = "<strong>" + roomsArray[i].roomName.substr(0, currentValue.length) + "</strong>";
@@ -31,9 +26,9 @@ var autocomplete = function(input, roomsArray) {
                 titleDiv.addEventListener("click", function(e) {
                     //roomsArray.value = this.getElementsByTagName("input")[0].value;
                     closeAllListsButPassed();
-                    let selected = e.path[0].childNodes[0].innerHTML + (e.path[0].childNodes[1].nodeValue == null ? "" : e.path[0].childNodes[1].nodeValue);
+                    let selected = e.path[0].childNodes[0].innerHTML + (e.path[0].childNodes[1] && e.path[0].childNodes[1].nodeValue == null ? "" : e.path[0].childNodes[1].nodeValue);
                     input.value = selected;
-                    
+                    input.setAttribute("value", selected);
                     
             });
             newDiv.appendChild(titleDiv);
@@ -80,3 +75,36 @@ var autocomplete = function(input, roomsArray) {
       closeAllListsButPassed(e.target);
   });
   }
+
+
+  
+let uiInit = function() {
+    autocomplete(document.getElementById("dest-p"), FloorMap.getRooms());
+    autocomplete(document.getElementById("start-p"), FloorMap.getRooms());
+
+    let findPathButton = document.getElementById("build-route-button");
+    findPathButton.addEventListener("click", function() {
+        
+        let startName = document.getElementById("start-p").value, endName = document.getElementById("dest-p").value;
+        let rooms = FloorMap.getRooms();
+
+        let startId, endId;
+        
+        for(let i = 0; i < rooms.length; i++) {
+            if(rooms[i].roomName == startName) {
+                startId = rooms[i].roomDoorId;
+            }
+            if(rooms[i].roomName == endName) {
+                endId = rooms[i].roomDoorId;
+            }
+        }
+
+        if(startId != null && endId != null) {
+            WayFinder.findPath(startId, endId);
+        }
+        
+    });
+}
+window.addEventListener("load", uiInit);
+
+
