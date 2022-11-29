@@ -1,6 +1,12 @@
 let escapeDot = function (nonEscapedString) {
     return nonEscapedString.replaceAll(".", "\\.");
 }
+let remvoeAllPolylines = function() {
+    let polylines = document.querySelectorAll("polyline");
+    for(let i = 0; i < polylines.length; i++) {
+        polylines[i].parentNode.removeChild(polylines[i]);
+    }
+}
 WayFinder = {
     floorHeight: 200, // pixels
     floors: ["floor0", "floor1", "floor2", "floor3", "floor4"],
@@ -108,6 +114,7 @@ WayFinder = {
         }
     },
     findPath: function (startId, endId) {
+        remvoeAllPolylines();
         let startLine = this.getLineById(startId);
         let endLine = this.getLineById(endId);
 
@@ -160,7 +167,12 @@ WayFinder = {
 
         let resultWay = {};
 
-
+        
+        /*
+        <animate attributeName="points" dur="5s" repeatCount="indefinite"
+    from="100,100 900,100 900,900 100,900 100,100"
+      to="200,200 800,500 800,500 200,800 200,200"
+  />*/
         for (let i = 0; i < path.length; i++) {
             //points += " " + path[i].x + ", " + path[i].y;
             if(!(path[i].floor in resultWay)) {
@@ -168,10 +180,22 @@ WayFinder = {
                 polyline.setAttributeNS(null, "stroke-width", 2);
                 polyline.setAttributeNS(null, "stroke", "red");
                 polyline.setAttributeNS(null, "fill", "none");
-                polyline.setAttribute("points", " " + path[i].x + ", " + path[i].y);
+                polyline.setAttributeNS(null, "class", "path-polyline");
+
+
+                let animation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                animation.setAttribute("attributeName", "points");
+                animation.setAttribute("dur", "5s");
+                animation.setAttribute("class", "path-polyline-animation");
+                animation.setAttribute("repeatCount", "indefinite");
+                animation.setAttribute("values", " " + path[i].x + ", " + path[i].y);
+                polyline.appendChild(animation);
+
                 resultWay[path[i].floor] = polyline;
+
+                
             } else {
-                resultWay[path[i].floor].setAttribute("points", resultWay[path[i].floor].getAttribute("points") + " " + path[i].x + ", " + path[i].y);
+                resultWay[path[i].floor].childNodes[0].setAttribute("values", resultWay[path[i].floor].childNodes[0].getAttribute("values") + " " + path[i].x + ", " + path[i].y);
             }
         }
 

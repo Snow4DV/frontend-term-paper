@@ -304,3 +304,15 @@ body {
         margin: 10px;
     }
 }
+
+.path-polyline {
+    stroke-width: 3px;
+  stroke: #f44336;
+  fill: none;
+  border-radius: 1px;
+  animation-direction: alternate;
+}
+
+.path-polyline-animation {
+  animation-direction: alternate;
+}
