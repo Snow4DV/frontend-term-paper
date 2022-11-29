@@ -95,12 +95,7 @@ WayFinder = {
                         let dstNode = document.querySelector("#" + escapeDot(portalWays[k]));
                         if (portalWays[k].split(".").length > 0 && portalWays[k].split(".")[2] != floor && this.getTypeOfLine(dstNode) == "Portal") { // Check "if it is a portal to another floor" is implemented
                             let dstPortal = dstNode;
-                            console.log("Searched for " + portalWays[k]);
-                            console.log(dstPortal);
                             let dstCoords = this.getXAndYByHTML(dstPortal);
-
-                            console.log("Comparison:  between " + floorLines[j].id.split(".")[2] + " and " + dstPortal.id.split(".")[2]);
-                            console.log(this.compareFloors(floorLines[j].id.split(".")[2], dstPortal.id.split(".")[2]));
                             if (this.compareFloors(floorLines[j].id, dstPortal.id) > 0) { 
                                 this.graph.addLine(coords.x2, coords.y2, floorLines[j].id + "-to-" + dstPortal.id, dstCoords.x1, dstCoords.y1, floor, portalWays[k].split(".")[2]); // Fake line between portals. It's a portal between floors so it will not be drawn
                                 // Note that it will be added only once because of the comparison. [btw it is newer zero because zero will not be passed]

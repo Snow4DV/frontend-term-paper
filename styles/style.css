@@ -62,20 +62,7 @@ body {
   }
 
 
-  .active-fbutton {
-    width: 100%;
-    height: 30px;
-    background-color: #9575CD;
-    color: white;
-    text-align: center;
-    position: relative;
-    line-height: 30px;
-    line-height: 30px;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-  }
+
   .fbutton {
     width: 100%;
     height: 30px;
@@ -90,14 +77,18 @@ body {
     transition: all 0.17s ease-in;
   }
 
-  .fbutton:hover {
+  .fbutton:hover:not(.active-fbutton) {
     cursor: pointer;
   }
 
-  .fbutton:hover {
+  .fbutton:hover:not(.active-fbutton)  {
     background-color: #eeeeee;
   }
 
+  .active-fbutton {
+    background-color: #9575CD;
+    color: white;
+  }
 
 
  .svg-icon {
@@ -114,7 +105,7 @@ body {
     z-index: 2;
     position: fixed;
     height: 20%;
-    width: 20%;
+    width: min-content;
     top: 2%;
     padding: 20px;
     left: 1%;
@@ -132,6 +123,15 @@ body {
 
   .route-window:hover {
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  }
+
+  .route-window > * {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto;
   }
 
   .input-container {
@@ -188,7 +188,7 @@ body {
     position: relative;
     
     display: block;
-    margin: 30px auto;
+
     padding: 0;
   
     overflow: hidden;
@@ -215,7 +215,7 @@ body {
   .materialbutton span {
     display: block;
     padding: 12px 24px;
-    font-size: 27px;
+    font-size: 14px;
   }
   
   .materialbutton:before {
@@ -247,4 +247,59 @@ body {
     transition: width .2s ease-out, padding-top .2s ease-out;
   }
   
+  .route-window > * + * {
+    margin-top: 10px;
+  }
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+.autocomplete-items {
+  position: absolute;
+  overflow:auto;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300%;
+  height: 300%;
+  border-bottom: none;
+  border-top: none;
+  border: 1px solid #d4d4d4;
+}
+
+.autocomplete-items::-webkit-scrollbar {
+    display: none;
+  }
   
+
+  .autocomplete-items {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+  }
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+@media (orientation: portrait) and (max-width: 1100px) {
+    .route-window {
+        width: calc(100% - 70px);
+        top: 0px;
+        left: 0px;
+        margin: 10px;
+    }
+}
