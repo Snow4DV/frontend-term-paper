@@ -13,15 +13,15 @@ var setVisibleFloor = function (floorId) {
     }
     currentFloorId = floorId;
     currentFloorG = document.getElementById(currentFloorId + "-g");
-    updateTransform();
+    updateSvgViewport();
 }
 
 let map = document.getElementById("maps");
 let isMouseOrFingerDown = false;
 let previousMouseOrFingerMove = null;
 
-let translate = { x: 0, y: 0 };
-let scale = { x: 1, y: 1 };
+let leftTopPoint = { x: 0, y: 0 };
+let scale = 1;
 
 let currentFloorG = document.getElementById(currentFloorId + "-g");
 
@@ -55,9 +55,11 @@ map.onmousemove = function (event) {
         let deltaX = event.x - previousMouseOrFingerMove.x;
         let deltaY = event.y - previousMouseOrFingerMove.y;
 
-        translate.x += deltaX;
-        translate.y += deltaY;
-        updateTransform();
+
+        
+        leftTopPoint.x -= deltaX/scale; 
+        leftTopPoint.y -= deltaY/scale;
+        updateSvgViewport();
 
     }
     previousMouseOrFingerMove = event;
@@ -74,15 +76,15 @@ map.ontouchmove = function (event) {
     previousMouseOrFingerMove = event;
 }
 
-let updateTransform = function () {
-    currentFloorG.setAttribute("transform", "translate(" + translate.x + "," + translate.y + ") scale(" + scale.x + "," + scale.y + ")");
-}
-
 
 let updateSvgViewport = function () {
     let mapSvgs = document.querySelectorAll("#maps > * > svg");
     for (let i = 0; i < mapSvgs.length; i++) {
-        mapSvgs[i].setAttribute("viewBox", "0 0 " + window.innerWidth + " " + window.innerHeight);
+        //mapSvgs[i].setAttribute("viewBox", "0 0 " + window.innerWidth + " " + window.innerHeight);
+        let width = window.innerWidth/scale;
+        let height = window.innerHeight/scale;
+        mapSvgs[i].setAttribute("viewBox", (leftTopPoint.x) + " " + (leftTopPoint.y) + " " + (width) + " " + (height));
+    
     }
 }
 
@@ -93,26 +95,76 @@ let init = function () {
 
     map.addEventListener('wheel', function (event) {
 
-        let mult = event.wheelDeltaY > 0 ? -0.1 : 0.1;
+        let oldDimensions = {width: window.innerWidth/scale, height: window.innerHeight/scale};
+
+        scale += event.wheelDeltaY > 0 ? 0.15 : -0.15;
+
+        if(scale < 0.1) scale = 0.1;
+
+        let newDimensions = {width: window.innerWidth/scale, height: window.innerHeight/scale};
+
+
+        let xRel = event.clientX/window.innerWidth; 
+        let yRel = event.clientY/window.innerHeight; 
+
+        leftTopPoint.x += (oldDimensions.width - newDimensions.width) * xRel;
+        leftTopPoint.y += (oldDimensions.height - newDimensions.height) * yRel;
+
+
+        
+
+
+
+        //leftTopPoint.x += (oldDimensions.width - newDimensions.width) * scale ;
+        //leftTopPoint.y += (oldDimensions.height - newDimensions.height) * scale;
+
+
+
+
+
+        //leftTopPoint.x -= offsetX/scale;
+        //leftTopPoint.y -= offsetY/scale;
+
+
+        updateSvgViewport();
+
+
+
+
+        /*let mult = event.wheelDeltaY > 0 ? -0.1 : 0.1;
+        scale -= mult;
+        scale -= mult;
+
         let oldBoundingRect = currentFloorG.getBoundingClientRect();
-        scale.x -= mult;
-        scale.y -= mult;
+
         updateTransform();
         let newBoundingRect = currentFloorG.getBoundingClientRect();
 
-        let offsetX = (newBoundingRect.width - oldBoundingRect.width * (scale.x - mult))/2;
+        var xRel = event.clientX - oldBoundingRect.left; 
+        var yRel = event.clientY - oldBoundingRect.top; 
 
-        let offsetY = (newBoundingRect.height - oldBoundingRect.height * (scale.y - mult))/2;
 
-        translate.x += offsetX;
-        translate.y += offsetY;
+        let offsetX = (newBoundingRect.width - oldBoundingRect.width)*((xRel * (1.015))/oldBoundingRect.width);
+
+        let offsetY = (newBoundingRect.height - oldBoundingRect.height)*((yRel * 1.02)/oldBoundingRect.height);
+        //console.log({xRel2: xRel/oldBoundingRect.width, yRel2: yRel/oldBoundingRect.height});
+        //console.log({clientX: event.clientX, clientY: event.clientY});
+
+        //console.log({xRel: xRel, yRel: yRel});
+        //console.log(oldBoundingRect);
+        //translate.x -= offsetX;
+        //translate.y -= offsetY;
+        console.log(oldBoundingRect);
+        console.log(newBoundingRect);
+        console.log({offsetX: offsetX, offsetY: offsetY});
+        console.log({xDelta: newBoundingRect.width - oldBoundingRect.width, yDelta: newBoundingRect.height - oldBoundingRect.height});
+        console.log({xRel: xRel, yRel: yRel});
+
+        console.log("--------");
 
         updateTransform();
 
-        
-
-        
-        return false;
+      */
     }, false);
 
 
@@ -153,11 +205,6 @@ function transliterate(word){
   return word.split('').map(function (char) { 
     return transliterateArray[char] || char; 
   }).join("");
-}
-
-function changeScale(multiplier) {
-    scale = {x: multiplier, y: multiplier};
-    updateTransform();
 }
 
 

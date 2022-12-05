@@ -36,12 +36,12 @@
 body {
     background-color: #eeeeee;
     overflow: hidden; 
-    
+    margin: 0px;
   }
+
 
   .stages {
     position: fixed;
-    height: min-content;
     width: 50px;
     bottom: 5%;
     right: 2%;
@@ -101,14 +101,15 @@ body {
 
 
 
+
  .route-window {
     z-index: 2;
     position: fixed;
-    height: 20%;
-    width: min-content;
+    height: min-content;
+    width: 500px;
     top: 2%;
     padding: 20px;
-    left: 1%;
+    margin-left: 1%;
     border-radius:  10px;
     background-color: white;
     box-shadow: 0px 0px 3px black;
@@ -140,7 +141,7 @@ body {
   
   input {
     height: 48px;
-    width: 280px;
+    width: 100%;
     border-radius: 4px;
     box-sizing: border-box;
     padding: 16px;
@@ -259,7 +260,6 @@ body {
 .autocomplete-items {
   position: absolute;
   overflow:visible;
-  position: fixed;
   z-index: 99;
   top: 100%;
   left: 0;
@@ -298,11 +298,11 @@ body {
 
 @media (orientation: portrait) and (max-width: 1100px) {
     .route-window {
-        width: calc(90% - 20px);
-        top: 0px;
-        left: 0px;
-        right: 0px;
-        margin: 10px;
+        width: 90%;
+        height: min-content;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        margin-left: 0%;
     }
 }
 

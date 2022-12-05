@@ -7,8 +7,7 @@
   <meta name="viewport" content="width=device-width,&nbsp;initial-scale=1.0">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="stylesheet" href="styles/style.css">
-  <meta name="viewport" 
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>МИРЭА - Навигатор</title>
   <!--Основной скрипт-->
   <script src="js/main.js"></script>
@@ -14587,23 +14586,29 @@
 
 
   <div class="route-window">
-    <div class="input-container">
-      <input type="text" id="start-p" name="fname" value="" aria-labelledby="label-fname" />
-      <label class="label" for="fname" id="label-fname">
-        <div class="text">Откуда</div>
-      </label>
-    </div>
+    <div class="route-window-screen" id="search-screen" hidden>
+      <div class="input-container">
+        <input type="text" id="room-search" name="fname" value="" aria-labelledby="label-fname" />
+        <label class="label" for="fname" id="label-fname">
+          <div class="text">Поиск аудитории</div>
+        </label>
+      </div>
 
-    <div class="input-container">
-      <input type="text" id="dest-p" name="fname" value="" aria-labelledby="label-fname" />
-      <label class="label" for="fname" id="label-fname">
-        <div class="text">Куда</div>
-      </label>
-    </div>
+      <div class="input-container" hidden>
+        <input type="text" id="dest-p" name="fname" value="" aria-labelledby="label-fname" />
+        <label class="label" for="fname" id="label-fname">
+          <div class="text">Куда</div>
+        </label>
+      </div>
 
-    <button class="materialbutton" id="build-route-button" type="button"><span>Построить маршрут</span></button>
+      <button class="materialbutton" id="build-route-button" type="button" style="display:none;"><span>Построить
+          маршрут</span></button>
+    </div>
+    <div class="route-window-screen" id="room-screen">
+        <h3>Аудитория 354</h3>
+    </div>
   </div>
-  
+
 
 
 
