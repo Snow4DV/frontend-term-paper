@@ -93,18 +93,25 @@ let init = function () {
 
     map.addEventListener('wheel', function (event) {
 
-        let centerX = currentFloorG.getBBox().width / 2;
-        let centerY = currentFloorG.getBBox().height / 2;
-
-        let mouseX = event.x; // FIXME: Zoom
-        let mouseY = event.y;
-
-        let scaleDelta = event.deltaY / 1000;
-        scale.x -= scaleDelta;
-        scale.y -= scaleDelta;
-        translate.x = centerX * (1 - scale.x);
-        translate.y = centerY * (1 - scale.y);
+        let mult = event.wheelDeltaY > 0 ? -0.1 : 0.1;
+        let oldBoundingRect = currentFloorG.getBoundingClientRect();
+        scale.x -= mult;
+        scale.y -= mult;
         updateTransform();
+        let newBoundingRect = currentFloorG.getBoundingClientRect();
+
+        let offsetX = (newBoundingRect.width - oldBoundingRect.width * (scale.x - mult))/2;
+
+        let offsetY = (newBoundingRect.height - oldBoundingRect.height * (scale.y - mult))/2;
+
+        translate.x += offsetX;
+        translate.y += offsetY;
+
+        updateTransform();
+
+        
+
+        
         return false;
     }, false);
 
@@ -146,6 +153,11 @@ function transliterate(word){
   return word.split('').map(function (char) { 
     return transliterateArray[char] || char; 
   }).join("");
+}
+
+function changeScale(multiplier) {
+    scale = {x: multiplier, y: multiplier};
+    updateTransform();
 }
 
 
