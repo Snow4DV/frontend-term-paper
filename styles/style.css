@@ -120,20 +120,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     border: 3px;
+    display: flex;
+    flex-flow: column;
+    
   }
 
   .route-window:hover {
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
 
-  .route-window > * {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-    margin: auto;
-  }
 
   .input-container {
     position: relative;
@@ -169,7 +164,7 @@ body {
   
   input:focus {
     outline: none;
-    border: 2px solid blue;
+    border: 2px solid #9575CD;
   }
   
   input:focus + .label .text, :not(input[value=""]) + .label .text {
@@ -181,7 +176,7 @@ body {
   }
   
   input:focus + .label .text {
-    color: blue;
+    color: #9575CD;
   }
 
 
@@ -258,14 +253,14 @@ body {
 }
 
 .autocomplete-items {
-  position: absolute;
-  overflow:visible;
+  /*position: absolute;*/
+  overflow:auto;
   z-index: 99;
-  top: 100%;
+  /*top: 100%;
   left: 0;
   right: 0;
-  max-height: 300%;
-  height: min-content;
+  max-height: 300%;*/
+  height: 350px;
   border-bottom: none;
   border-top: none;
   border: 1px solid #d4d4d4;
@@ -299,11 +294,13 @@ body {
 @media (orientation: portrait) and (max-width: 1100px) {
     .route-window {
         width: 90%;
+        
         height: min-content;
         left: 50%;
         transform: translate(-50%, 0%);
         margin-left: 0%;
     }
+   
 }
 
 .path-polyline {
@@ -316,4 +313,53 @@ body {
 
 .path-polyline-animation {
   animation-direction: alternate;
+}
+
+
+textarea, .label .text {
+  font-size: 16px;
+}
+
+.label-textarea .text {
+  transition: all 0.15s ease-out;
+  color: grey;
+}
+
+textarea {
+  width: 100%;
+  height: 130px;
+  resize: none; 
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid #c0c0c0;
+}
+
+textarea:focus {
+  outline: none;
+  border: 2px solid #9575CD;
+  
+}
+
+textarea:focus + .label-textarea .text, :not(textarea[value=""]) + .label-textarea .text {
+  font-size: 12px;
+  transform: translate(0, -460%);
+  background-color: white;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+textarea:focus + .label-textarea .text {
+  color: #9575CD;
+
+}
+
+.label-textarea {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 17px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
 }

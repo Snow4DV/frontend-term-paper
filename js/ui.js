@@ -16,7 +16,7 @@ var autocomplete = function(input, roomsArray) {
         newDiv = document.createElement("DIV");
         newDiv.setAttribute("id", this.id + "autocomplete-list");
         newDiv.setAttribute("class", "autocomplete-items");
-        this.parentNode.appendChild(newDiv);
+        this.parentNode.parentNode.appendChild(newDiv);
         for (let i = 0; i < roomsArray.length; i++) {
           if (roomsArray[i].roomName.substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
             titleDiv = document.createElement("DIV");
@@ -81,6 +81,7 @@ var autocomplete = function(input, roomsArray) {
 let uiInit = function() {
     autocomplete(document.getElementById("dest-p"), FloorMap.getRooms());
     autocomplete(document.getElementById("start-p"), FloorMap.getRooms());
+    autocomplete(document.getElementById("find-room"), FloorMap.getRooms());
 
     let findPathButton = document.getElementById("build-route-button");
     findPathButton.addEventListener("click", function() {
@@ -106,5 +107,10 @@ let uiInit = function() {
     });
 }
 window.addEventListener("load", uiInit);
+
+
+function openRoom(roomName) {
+
+}
 
 

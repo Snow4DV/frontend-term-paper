@@ -12,8 +12,9 @@
   <!--Основной скрипт-->
   <script src="js/main.js"></script>
   <script src="js/wayfinder.js"></script>
+</head>
 
-
+<body>
   <div class="maps" id="maps">
 
     <div id="floor0-container" hidden="">
@@ -14586,34 +14587,61 @@
 
 
   <div class="route-window">
-    <div class="route-window-screen" id="search-screen" hidden>
+
+    <div id="room-search">
       <div class="input-container">
-        <input type="text" id="room-search" name="fname" value="" aria-labelledby="label-fname" />
-        <label class="label" for="fname" id="label-fname">
-          <div class="text">Поиск аудитории</div>
+        <input type="text" id="find-room" name="find-room" value="" aria-labelledby="label-find-room" />
+        <label class="label" for="find-room" id="label-find-room">
+          <div class="text">Найти аудиторию</div>
         </label>
       </div>
+      
 
-      <div class="input-container" hidden>
-        <input type="text" id="dest-p" name="fname" value="" aria-labelledby="label-fname" />
-        <label class="label" for="fname" id="label-fname">
+    
+    </div>
+
+    <div id="search-screen" hidden>
+     
+      <div class="input-container">
+        <input type="text" id="start-p" name="start-p" value="" aria-labelledby="label-start-p" />
+        <label class="label" for="start-p" id="label-start-p">
+          <div class="text">Откуда</div>
+        </label>
+      </div>
+      <br>
+
+      <div class="input-container">
+        <input type="text" id="dest-p" name="dest-p" value="" aria-labelledby="label-dest-p" />
+        <label class="label" for="dest-p" id="label-dest-p">
           <div class="text">Куда</div>
         </label>
       </div>
 
-      <button class="materialbutton" id="build-route-button" type="button" style="display:none;"><span>Построить
+      <br>
+
+      <button class="materialbutton" id="build-route-button" type="button"><span>Построить
           маршрут</span></button>
     </div>
-    <div class="route-window-screen" id="room-screen">
-        <h3>Аудитория 354</h3>
+
+    <div class="route-window-screen" id="room-screen" hidden>
+      <h2 id="room-screen-name">Аудитория Г-313</h2>
+      <p id="room-screen-description">Находится на этаже 2</p>
+      <div class="input-container">
+        <textarea type="text" id="room-screen-notes" name="notes-field" value="" aria-labelledby="label-notes-field"></textarea>
+        <label class="label-textarea" for="notes-field" id="label-notes-field">
+          <div class="text">Заметки</div>
+        </label>
+      </div>
+      <br>
+      <button class="materialbutton" id="build-route-button" type="button"><span>Проложить маршрут</span></button>
     </div>
   </div>
 
 
 
 
-  </body>
-  <script src="js/map.js"></script>
-  <script src="js/ui.js"></script>
+</body>
+<script src="js/map.js"></script>
+<script src="js/ui.js"></script>
 
 </html>
