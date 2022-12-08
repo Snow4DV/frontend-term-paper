@@ -11,7 +11,8 @@ window.addEventListener("load", function() {
         notesTextArea: document.getElementById("room-screen-notes"),
         currentRoom: null,
         toThisRoomButton: document.getElementById("to-this-room-button"),
-        fromThisRoomButton: document.getElementById("from-this-room-button")
+        fromThisRoomButton: document.getElementById("from-this-room-button"),
+        addNotesButton: document.getElementById("add-note-for-room")
     }
     
     buildPathScreenObjects = {
@@ -19,7 +20,7 @@ window.addEventListener("load", function() {
         toInput: document.getElementById("dest-p")
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.searchw);
 
     routeWindow = document.getElementById("route-window");
     screens = routeWindow.childNodes;
@@ -40,11 +41,15 @@ function initRoomScreen() {
 
     roomScreenObjects.toThisRoomButton.addEventListener("click", function() {
         openWindow("build-route-screen", {from: null, to: roomScreenObjects.currentRoom});
-    });
+    }); 
 
     roomScreenObjects.fromThisRoomButton.addEventListener("click", function() {
         openWindow("build-route-screen", {from: roomScreenObjects.currentRoom, to: null});
     });
+
+    roomScreenObjects.addNotesButton.addEventListener("click", function() {
+        window.open("add-note.html?room=" + JSON.stringify(roomScreenObjects.currentRoom), "", "width=400,height=400");
+    })
 }
 
 
@@ -92,6 +97,16 @@ function openWindow(id, object) {
             } else {
                 roomScreenObjects.notesTextArea.removeAttribute("value");
             }
+
+            window.addEventListener('storage', function(event){
+                let savedNote = localStorage.getItem(roomScreenObjects.currentRoom.roomDoorId);
+                roomScreenObjects.notesTextArea.value = savedNote ? savedNote : "";
+                if(roomScreenObjects.notesTextArea.value != "") {
+                    roomScreenObjects.notesTextArea.setAttribute("value", roomScreenObjects.notesTextArea.value);
+                } else {
+                    roomScreenObjects.notesTextArea.removeAttribute("value");
+                }
+            });
             highlightRoom(object);
             break;
     }

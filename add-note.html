@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<!--Метаданные-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,&nbsp;initial-scale=1.0">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="stylesheet" href="styles/notestyle.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>МИРЭА - Навигатор: добавить заметку</title>
+  <script src="js/new-note.js"></script>
+</head>
+
+<body>
+
+  <div class="route-window" id="route-window">
+
+    <div class="new-note-screen" id="add-note-screen">
+      <div class="screen-title">
+        <img src="icons/back.svg" id="back-button" class="back-button">
+        <h2 id="room-screen-name"> Новая заметка для Г-333</h2>
+      </div>
+      <br>
+
+      <div class="input-container">
+        <textarea type="text" id="room-screen-notes" name="notes-field" value=""
+          aria-labelledby="label-notes-field"></textarea>
+        <label class="label-textarea" for="notes-field" id="label-notes-field">
+          <div class="text">Заметка</div>
+        </label>
+      </div>
+      <br>
+      <div class="buttons-inline">
+        <button class="materialbutton" id="save-note-button" type="button"><span>Сохранить</span></button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</body>
+
+
+</html>
