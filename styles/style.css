@@ -243,10 +243,7 @@ body {
     transition: width .2s ease-out, padding-top .2s ease-out;
   }
   
-  .route-window > * + * {
-    margin-top: 10px;
-  }
-
+ 
 .autocomplete {
   position: relative;
   display: inline-block;
@@ -300,6 +297,17 @@ body {
         transform: translate(-50%, 0%);
         margin-left: 0%;
     }
+
+    .route-window:focus-within:has(#room-search[style*="display:visible"]) {
+      height: calc(96% - 40px);
+    }
+
+   
+
+    .route-window:focus-within:has(#room-search[style*="display:visible"]) > #room-search > .autocomplete-items {
+      height: calc(96vh - 80px);
+    }
+    
    
 }
 
@@ -341,6 +349,7 @@ textarea:focus {
   
 }
 
+
 textarea:focus + .label-textarea .text, :not(textarea[value=""]) + .label-textarea .text {
   font-size: 12px;
   transform: translate(0, -460%);
@@ -362,4 +371,21 @@ textarea:focus + .label-textarea .text {
   display: flex;
   align-items: center;
   pointer-events: none;
+}
+
+
+.screen-title > h2 {
+  line-height: 0.0;
+}
+
+.screen-title {
+  display: flex;
+  flex-flow: row;
+  height: 3ex;
+}
+
+.back-button {
+  margin-top: 7px;
+  height: 3ex;
+  cursor: pointer;
 }
