@@ -18,6 +18,9 @@ window.addEventListener("load", function() {
         fromInput: document.getElementById("start-p"),
         toInput: document.getElementById("dest-p")
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+
     routeWindow = document.getElementById("route-window");
     screens = routeWindow.childNodes;
     currentScreen = document.getElementById("room-search");
