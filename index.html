@@ -14600,8 +14600,12 @@
 
     </div>
 
-    <div id="search-screen" style="display:none">
-
+    <div id="build-route-screen" style="display:none">
+      <div class="screen-title">
+        <img src="icons/back.svg" class="back-button">
+        <h2 id="build-route-title">Построение маршрута</h2>
+      </div>
+      <br>
       <div class="input-container">
         <input type="text" id="start-p" name="start-p" value="" aria-labelledby="label-start-p" />
         <label class="label" for="start-p" id="label-start-p">
@@ -14625,9 +14629,9 @@
 
     <div class="route-window-screen" id="room-screen" style="display:none">
       <div class="screen-title">
-      <img src="icons/back.svg" class="back-button">
-      <h2 id="room-screen-name"> Аудитория Г-313</h2>
-    </div>
+        <img src="icons/back.svg" class="back-button">
+        <h2 id="room-screen-name"> Аудитория Г-313</h2>
+      </div>
       <p id="room-screen-description">Находится на этаже 2</p>
 
       <div class="input-container">
@@ -14638,7 +14642,11 @@
         </label>
       </div>
       <br>
-      <button class="materialbutton" id="build-route-button" type="button"><span>Проложить маршрут</span></button>
+      <div class="buttons-inline">
+        <button class="materialbutton" id="to-this-room-button" type="button"><span>Сюда</span></button>
+      
+        <button class="materialbutton" id="from-this-room-button" type="button"><span>Отсюда</span></button>
+      </div>
     </div>
   </div>
 

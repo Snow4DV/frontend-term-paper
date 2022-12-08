@@ -173,9 +173,12 @@ WayFinder = {
     from="100,100 900,100 900,900 100,900 100,100"
       to="200,200 800,500 800,500 200,800 200,200"
   />*/
+  
+  let lastFloor = "";
         for (let i = 0; i < path.length; i++) {
             //points += " " + path[i].x + ", " + path[i].y;
-            if(!(path[i].floor in resultWay)) {
+            if(path[i].floor != lastFloor) {
+                lastFloor = path[i].floor;
                 let polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 polyline.setAttributeNS(null, "stroke-width", 2);
                 polyline.setAttributeNS(null, "stroke", "red");
@@ -191,11 +194,14 @@ WayFinder = {
                 animation.setAttribute("values", " " + path[i].x + ", " + path[i].y);
                 polyline.appendChild(animation);
 
-                resultWay[path[i].floor] = polyline;
+                if(!resultWay[path[i].floor]) {
+                    resultWay[path[i].floor] = [];
+                } 
+                resultWay[path[i].floor].push(polyline);
 
                 
             } else {
-                resultWay[path[i].floor].childNodes[0].setAttribute("values", resultWay[path[i].floor].childNodes[0].getAttribute("values") + " " + path[i].x + ", " + path[i].y);
+                resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].setAttribute("values", resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].getAttribute("values") + " " + path[i].x + ", " + path[i].y);
             }
         }
 
@@ -203,8 +209,10 @@ WayFinder = {
 
         for(let i = 0; i < resultWayKeys.length; i++) {
             let floor = resultWayKeys[i];
-            let polyline = resultWay[floor];
-            document.getElementById(floor + "-g").appendChild(polyline);
+            for(let j = 0; j < resultWay[floor].length; j++) {
+                let polyline = resultWay[floor][j];
+                document.getElementById(floor + "-g").appendChild(polyline);
+            }
         }
 
 
@@ -269,7 +277,7 @@ class Graph {
             distance = Math.abs(WayFinder.compareFloors(floor1, floor2)) * WayFinder.floorHeight;
         }
 
-        this.addEdge(node1, node2, distance); // FIXME: distance for ladder is big, actually. Consider it.
+        this.addEdge(node1, node2, distance); 
     }
 
     addNode(x, y, id, floor) {

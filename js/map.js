@@ -273,7 +273,7 @@ var FloorMap = {
         }
 
         else if (roomIdSplit[0] == "CANTEEN" && roomIdSplit.length >= 2) {
-            resultRoomName = "Столовая " + transliterate(roomIdSplit[1]);
+            resultRoomName = "Столовая " + transliterate(roomIdSplit[1]) + (roomIdSplit[2] ? "-" + roomIdSplit[2] : "");
         }
         else if (roomIdSplit[0] == "SECURITY") {
             resultRoomName = "Охрана";
@@ -350,6 +350,26 @@ var FloorMap = {
     }
 }
 
+
+function highlightRoom(room) {
+    let newStyle = "fill: #b39ddb; stroke: #f06292; stroke-width: 2px";
+    let children = document.getElementById(room.roomGroupId).childNodes;
+    for(let i = 0; i < children.length; i++) {
+        if(children[i].id && !children[i].id.includes("_0")) {
+            //children[i].removeAttribute("class");
+            children[i].setAttribute("style", newStyle);
+        }
+    }
+}
+
+function unhighlightRoom(room) {
+    let children = document.getElementById(room.roomGroupId).childNodes;
+    for(let i = 0; i < children.length; i++) {
+        if(children[i].id && !children[i].id.includes("_0")) {
+            children[i].removeAttribute("style");
+        }
+    }
+}
 
 let onResize = function () {
     updateSvgViewport();

@@ -384,6 +384,13 @@ textarea:focus + .label-textarea .text {
   height: 3ex;
 }
 
+.buttons-inline {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  height: 40px;
+}
+
 .back-button {
   margin-top: 7px;
   height: 3ex;
