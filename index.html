@@ -14589,14 +14589,24 @@
   <div class="route-window" id="route-window">
 
     <div id="room-search" style="display:visible">
-      <div class="input-container">
-        <input type="text" id="find-room" name="find-room" value="" aria-labelledby="label-find-room" />
-        <label class="label" for="find-room" id="label-find-room">
-          <div class="text">Найти аудиторию</div>
-        </label>
+      <div>
+        <div class="inline-div">
+          <img src="icons/menu.svg" class="menu-button" id="menu-button">
+          <div class="find-room-input">
+            <div class="input-container">
+              <input type="text" id="find-room" name="find-room" value="" aria-labelledby="label-find-room" />
+              <label class="label" for="find-room" id="label-find-room">
+                <div class="text">Найти аудиторию</div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="menu-inline-div menu-inline-animation-out" id="menu-div" >
+          <a href="mirea-contacts.html">Контакты</a>
+          <a href="route-to-mirea.html">Как доехать</a>
+          <a href="about.html">О сайте</a>
+        </div>
       </div>
-
-
 
     </div>
 
@@ -14635,8 +14645,8 @@
       <p id="room-screen-description">Находится на этаже 2</p>
 
       <div class="input-container">
-        <textarea type="text" id="room-screen-notes" name="notes-field" value=""
-          aria-labelledby="label-notes-field" disabled></textarea>
+        <textarea type="text" id="room-screen-notes" name="notes-field" value="" aria-labelledby="label-notes-field"
+          disabled></textarea>
         <label class="label-textarea" for="notes-field" id="label-notes-field">
           <div class="text">Заметка</div>
         </label>
@@ -14644,7 +14654,7 @@
       <br>
       <div class="buttons-inline">
         <button class="materialbutton" id="to-this-room-button" type="button"><span>Сюда</span></button>
-      
+
         <button class="materialbutton" id="from-this-room-button" type="button"><span>Отсюда</span></button>
 
         <button class="materialbutton" id="add-note-for-room" type="button"><span>Заметка</span></button>
@@ -14658,8 +14668,8 @@
         <h2 id="route-built-successfully-title">Маршрут построен</h2>
       </div>
       <p id="route-ready-from-to" style="font-size:large"><b>Откуда:</b> Г-313<br><b>Куда:</b> Г-951</p>
-      
-      
+
+
       <p id="route-ready-distance" style="font-size:large"><b>Примерное расстояние:</b> 314 усл. метров</p>
     </div>
   </div>

@@ -290,7 +290,7 @@ body {
 
 @media (orientation: portrait) and (max-width: 1100px) {
     .route-window {
-        width: 90%;
+        width: 83%;
         
         height: min-content;
         left: 50%;
@@ -398,9 +398,96 @@ textarea:focus + .label-textarea .text {
 }
 
 
+.menu-button {
+  margin-top: 10px;
+  height: 3ex;
+  width: 3ex;
+  cursor: pointer;
+}
+
+
 .materialbutton {
   height: 40px;
 }
 #Rooms > g {
   cursor: pointer;
+}
+
+.find-room-input {
+  width: calc(100% - 4ex)
+}
+
+.inline-div {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  height: min-content;
+}
+
+.menu-inline-div {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  height: min-content;
+  padding-top: 10px;
+  color: #9575CD;
+  font-size: large;
+}
+
+.menu-inline-div > a {
+  text-decoration: none;
+  color: #9575CD;
+}
+
+
+.menu-inline-animation-in
+{
+    display: flex;
+    animation: fadeInFromNone 0.5s ease-out;
+}
+
+
+@keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: flex;
+        opacity: 0;
+    }
+
+    100% {
+        display: flex;
+        opacity: 1;
+    }
+}
+
+.menu-inline-animation-out
+{
+    display: flex;
+    animation: fadeToNone 0.5s ease-out;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeToNone {
+    0% {
+        display: flex;
+        opacity: 1;
+    }
+
+    95% {
+        display: flex;
+        opacity: 0;
+        
+    }
+
+    100% {
+        display: none;
+        opacity: 0;
+        height: 0px;
+        padding-top: 0px;
+    }
 }

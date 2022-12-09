@@ -5,6 +5,9 @@ var roomScreenObjects;
 var buildPathScreenObjects;
 var routeReadyScreenObjects;
 
+var menuButton;
+var menuDiv;
+
 window.addEventListener("load", function() {
     roomScreenObjects = {
         name: document.getElementById("room-screen-name"),
@@ -24,8 +27,22 @@ window.addEventListener("load", function() {
     initBackButtons();
     initRoomScreen();
     initRouteReadyScreen();
+
+    menuButton = this.document.getElementById("menu-button");
+    menuButton.addEventListener("click", function() {
+        openCloseMenu();
+    });
+    menuDiv = document.getElementById("menu-div");
     
 });
+
+function openCloseMenu() {
+    if(menuDiv.getAttribute("class") == "menu-inline-div menu-inline-animation-out") {
+        menuDiv.setAttribute("class", "menu-inline-div menu-inline-animation-in");
+    } else {
+        menuDiv.setAttribute("class", "menu-inline-div menu-inline-animation-out");
+    }
+}
 
 
 function initRouteReadyScreen() {
@@ -75,11 +92,15 @@ function initRoomScreen() {
    
 
     roomScreenObjects.toThisRoomButton.addEventListener("click", function() {
-        openWindow("build-route-screen", {from: null, to: roomScreenObjects.currentRoom});
+        let toRoom = roomScreenObjects.currentRoom;
+        roomScreenObjects.currentRoom = null;
+        openWindow("build-route-screen", {from: null, to: toRoom});
     }); 
 
     roomScreenObjects.fromThisRoomButton.addEventListener("click", function() {
-        openWindow("build-route-screen", {from: roomScreenObjects.currentRoom, to: null});
+        let fromRoom = roomScreenObjects.currentRoom;
+        roomScreenObjects.currentRoom = null;
+        openWindow("build-route-screen", {from: fromRoom, to: null});
     });
 
     roomScreenObjects.addNotesButton.addEventListener("click", function() {
@@ -108,9 +129,13 @@ function openWindow(id, object) {
     if(roomScreenObjects.currentRoom != null) {
         unhighlightRoom(roomScreenObjects.currentRoom);
     }
+
+    if(id != "route-screen") {
+        removeAllPolylines();
+    }
     switch(id) {
         case "room-search":
-            removeAllPolylines();
+            
             if(buildPathScreenObjects.fromHighlight != null) {
                 unhighlightRoom(buildPathScreenObjects.fromHighlight);
             }
