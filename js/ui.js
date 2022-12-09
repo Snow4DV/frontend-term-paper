@@ -111,10 +111,12 @@ let uiInit = function () {
     }
 
     if (startId != null && endId != null) {
-      WayFinder.findPath(startId, endId);
+      let searchResult = WayFinder.findPath(startId, endId);
+      openWindow("route-screen", {from: startName, to: endName, distance: (searchResult.distance/7.2) | 0});
     }
 
   });
+  
 }
 window.addEventListener("load", uiInit);
 

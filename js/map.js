@@ -152,60 +152,10 @@ let init = function () {
         leftTopPoint.y += (oldDimensions.height - newDimensions.height) * yRel;
 
 
-
-
-
-
-        //leftTopPoint.x += (oldDimensions.width - newDimensions.width) * scale ;
-        //leftTopPoint.y += (oldDimensions.height - newDimensions.height) * scale;
-
-
-
-
-
-        //leftTopPoint.x -= offsetX/scale;
-        //leftTopPoint.y -= offsetY/scale;
-
-
         updateSvgViewport();
 
 
 
-
-        /*let mult = event.wheelDeltaY > 0 ? -0.1 : 0.1;
-        scale -= mult;
-        scale -= mult;
-
-        let oldBoundingRect = currentFloorG.getBoundingClientRect();
-
-        updateTransform();
-        let newBoundingRect = currentFloorG.getBoundingClientRect();
-
-        var xRel = event.clientX - oldBoundingRect.left; 
-        var yRel = event.clientY - oldBoundingRect.top; 
-
-
-        let offsetX = (newBoundingRect.width - oldBoundingRect.width)*((xRel * (1.015))/oldBoundingRect.width);
-
-        let offsetY = (newBoundingRect.height - oldBoundingRect.height)*((yRel * 1.02)/oldBoundingRect.height);
-        //console.log({xRel2: xRel/oldBoundingRect.width, yRel2: yRel/oldBoundingRect.height});
-        //console.log({clientX: event.clientX, clientY: event.clientY});
-
-        //console.log({xRel: xRel, yRel: yRel});
-        //console.log(oldBoundingRect);
-        //translate.x -= offsetX;
-        //translate.y -= offsetY;
-        console.log(oldBoundingRect);
-        console.log(newBoundingRect);
-        console.log({offsetX: offsetX, offsetY: offsetY});
-        console.log({xDelta: newBoundingRect.width - oldBoundingRect.width, yDelta: newBoundingRect.height - oldBoundingRect.height});
-        console.log({xRel: xRel, yRel: yRel});
-
-        console.log("--------");
-
-        updateTransform();
-
-      */
     }, false);
 
 
@@ -235,7 +185,7 @@ let init = function () {
         document.getElementById(floors[newFloorIndex] + "-button").setAttribute("class", "active-fbutton fbutton");
     });
     WayFinder.createGraph();
-
+    addOnClickEventsOnEachRoom();
 }
 
 var transliterateArray = { "A": "А", "B": "Б", "V": "В", "G": "Г", "D": "Д", "L": "Л", "YO": "Ё", "I": "И", "C": "Ц", "U": "У", "K": "К", "E": "Э", "N": "Н", "G": "Г", "SH": "Ш", "SCH": "Щ", "Z": "З", "H": "Х", "'": "ь", "yo": "ё", "i": "и", "ts": "ц", "u": "у", "k": "к", "e": "э", "n": "н", "g": "г", "sh": "ш", "sch": "щ", "z": "з", "h": "х", "F": "Ф", "V": "В", "А": "А", "P": "П", "R": "Р", "O": "О", "L": "Л", "D": "Д", "ZH": "Ж", "f": "ф", "v": "в", "a": "а", "p": "п", "r": "р", "o": "о", "l": "л", "d": "д", "zh": "ж", "Ya": "Я", "CH": "Ч", "S": "С", "M": "М", "T": "Т", "B": "Б", "YU": "Ю", "ya": "я", "ch": "ч", "s": "с", "m": "м", "t": "т", "b": "б", "yu": "ю" };
@@ -351,8 +301,11 @@ var FloorMap = {
 }
 
 
-function highlightRoom(room) {
-    let newStyle = "fill: #b39ddb; stroke: #f06292; stroke-width: 2px";
+function highlightRoom(room,strokeColor) {
+    if(!strokeColor) {
+        strokeColor = "#f06292";
+    }
+    let newStyle = "fill: #b39ddb; stroke: " + strokeColor + "; stroke-width: 2px";
     let children = document.getElementById(room.roomGroupId).childNodes;
     for(let i = 0; i < children.length; i++) {
         if(children[i].id && !children[i].id.includes("_0")) {
@@ -380,3 +333,20 @@ window.addEventListener('resize', onResize);
 
 
 
+var addOnClickEventsOnEachRoom = function() {
+    /*
+    let roomObject = {
+                roomGroupId: roomsContainers[i].id,
+                roomDoorId: roomDoorId,
+                roomName: FloorMap.convertDoorIdToCyrillicAudName(roomDoorId, floor),
+                floor: floor
+            }
+    */
+    let rooms = FloorMap.getRooms();
+    for(let i = 0; i < rooms.length; i++) {
+        let roomGroup = document.getElementById(rooms[i].roomGroupId);
+        roomGroup.addEventListener("click", function(roomObject) {
+            openWindow("room-screen", roomObject);
+        }.bind(null, rooms[i]));
+    }
+}

@@ -1,9 +1,9 @@
 let escapeDot = function (nonEscapedString) {
     return nonEscapedString.replaceAll(".", "\\.");
 }
-let remvoeAllPolylines = function() {
+let removeAllPolylines = function () {
     let polylines = document.querySelectorAll("polyline");
-    for(let i = 0; i < polylines.length; i++) {
+    for (let i = 0; i < polylines.length; i++) {
         polylines[i].parentNode.removeChild(polylines[i]);
     }
 }
@@ -96,13 +96,13 @@ WayFinder = {
                     } else {
                         portalWays = portalWays.split(",");
                     }
-                    this.graph.addLine(coords.x1, coords.y1, floorLines[j].id, coords.x2, coords.y2, floor, floor); 
-                    for (let k = 0; k < portalWays.length; k++) { 
+                    this.graph.addLine(coords.x1, coords.y1, floorLines[j].id, coords.x2, coords.y2, floor, floor);
+                    for (let k = 0; k < portalWays.length; k++) {
                         let dstNode = document.querySelector("#" + escapeDot(portalWays[k]));
                         if (portalWays[k].split(".").length > 0 && portalWays[k].split(".")[2] != floor && this.getTypeOfLine(dstNode) == "Portal") { // Check "if it is a portal to another floor" is implemented
                             let dstPortal = dstNode;
                             let dstCoords = this.getXAndYByHTML(dstPortal);
-                            if (this.compareFloors(floorLines[j].id, dstPortal.id) > 0) { 
+                            if (this.compareFloors(floorLines[j].id, dstPortal.id) > 0) {
                                 this.graph.addLine(coords.x2, coords.y2, floorLines[j].id + "-to-" + dstPortal.id, dstCoords.x1, dstCoords.y1, floor, portalWays[k].split(".")[2]); // Fake line between portals. It's a portal between floors so it will not be drawn
                                 // Note that it will be added only once because of the comparison. [btw it is newer zero because zero will not be passed]
                             }
@@ -114,7 +114,7 @@ WayFinder = {
         }
     },
     findPath: function (startId, endId) {
-        remvoeAllPolylines();
+        removeAllPolylines();
         let startLine = this.getLineById(startId);
         let endLine = this.getLineById(endId);
 
@@ -141,7 +141,10 @@ WayFinder = {
             }
         );
 
-        let pathNodes = this.graph.findPathWithDijkstraByIds(startWay.id, endWay.id);
+        let searchResult = this.graph.findPathWithDijkstraByIds(startWay.id, endWay.id);
+
+        let pathNodes = searchResult.path;
+        let distance = searchResult.distance;
 
         for (let i = 0; i < pathNodes.length; i++) {
             path.push(
@@ -167,17 +170,17 @@ WayFinder = {
 
         let resultWay = {};
 
-        
+
         /*
         <animate attributeName="points" dur="5s" repeatCount="indefinite"
     from="100,100 900,100 900,900 100,900 100,100"
       to="200,200 800,500 800,500 200,800 200,200"
   />*/
-  
-  let lastFloor = "";
+
+        let lastFloor = "";
         for (let i = 0; i < path.length; i++) {
             //points += " " + path[i].x + ", " + path[i].y;
-            if(path[i].floor != lastFloor) {
+            if (path[i].floor != lastFloor) {
                 lastFloor = path[i].floor;
                 let polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 polyline.setAttributeNS(null, "stroke-width", 2);
@@ -194,12 +197,12 @@ WayFinder = {
                 animation.setAttribute("values", " " + path[i].x + ", " + path[i].y);
                 polyline.appendChild(animation);
 
-                if(!resultWay[path[i].floor]) {
+                if (!resultWay[path[i].floor]) {
                     resultWay[path[i].floor] = [];
-                } 
+                }
                 resultWay[path[i].floor].push(polyline);
 
-                
+
             } else {
                 resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].setAttribute("values", resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].getAttribute("values") + " " + path[i].x + ", " + path[i].y);
             }
@@ -207,15 +210,15 @@ WayFinder = {
 
         let resultWayKeys = Object.keys(resultWay);
 
-        for(let i = 0; i < resultWayKeys.length; i++) {
+        for (let i = 0; i < resultWayKeys.length; i++) {
             let floor = resultWayKeys[i];
-            for(let j = 0; j < resultWay[floor].length; j++) {
+            for (let j = 0; j < resultWay[floor].length; j++) {
                 let polyline = resultWay[floor][j];
                 document.getElementById(floor + "-g").appendChild(polyline);
             }
         }
-
-
+        return searchResult;
+        
     }
 }
 
@@ -270,14 +273,14 @@ class Graph {
     addLine(x, y, id, conX, conY, floor1, floor2) {
         let node1 = this.addNode(x, y, id, floor1);
         let node2 = this.addNode(conX, conY, id, floor2);
-        let distance; 
-        if(floor1 == floor2) {
+        let distance;
+        if (floor1 == floor2) {
             distance = WayFinder.distance(x, y, conX, conY);
         } else {
             distance = Math.abs(WayFinder.compareFloors(floor1, floor2)) * WayFinder.floorHeight;
         }
 
-        this.addEdge(node1, node2, distance); 
+        this.addEdge(node1, node2, distance);
     }
 
     addNode(x, y, id, floor) {
@@ -376,7 +379,7 @@ class Graph {
         }
         console.log(`Path is ${path.length} and time is ${times[endNode.key()]}`);
         console.log(path);
-        return path;
+        return { path: path, distance: times[endNode.key()] };
     }
 }
 

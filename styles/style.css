@@ -401,3 +401,6 @@ textarea:focus + .label-textarea .text {
 .materialbutton {
   height: 40px;
 }
+#Rooms > g {
+  cursor: pointer;
+}
