@@ -25,6 +25,8 @@ let previousMouseOrFingerMove = null;
 let leftTopPoint = { x: 620, y: -50 };
 let scale = 0.9;
 
+let mouseDownPos = null; // used to determine whether it was click or drag when clicking on a room
+
 let currentFloorG = document.getElementById(currentFloorId + "-g");
 
 map.onmousedown = function () {
@@ -32,6 +34,7 @@ map.onmousedown = function () {
 }
 map.onmouseup = function () {
     isMouseOrFingerDown = false;
+    previousMouseOrFingerMove = null;
 }
 map.onmouseleave = function () {
     isMouseOrFingerDown = false;
@@ -76,9 +79,9 @@ map.onmousemove = function (event) {
         leftTopPoint.x -= deltaX / scale;
         leftTopPoint.y -= deltaY / scale;
         updateSvgViewport();
-
     }
     previousMouseOrFingerMove = event;
+
 }
 map.ontouchmove = function (event) {
     if (event.touches.length == 2) {
@@ -89,11 +92,11 @@ map.ontouchmove = function (event) {
         const deltaDistance = distance(event);
         let zoomDelta = deltaDistance / currentZoom.distance;
         let zoomMultiplier = 2.6;
-        if(scale > 0.45) zoomMultiplier = 1; // Make zoom faster when map is bigger
-        scale = Math.min(Math.max((scale - (1 -zoomDelta)/zoomMultiplier), 0.1), 3);
+        if (scale > 0.45) zoomMultiplier = 1; // Make zoom faster when map is bigger
+        scale = Math.min(Math.max((scale - (1 - zoomDelta) / zoomMultiplier), 0.1), 3);
 
-        const xRel = ((event.touches[0].pageX + event.touches[1].pageX) / 2)/window.innerWidth; 
-        const yRel = ((event.touches[0].pageY + event.touches[1].pageY) / 2)/window.innerHeight;
+        const xRel = ((event.touches[0].pageX + event.touches[1].pageX) / 2) / window.innerWidth;
+        const yRel = ((event.touches[0].pageY + event.touches[1].pageY) / 2) / window.innerHeight;
 
         currentZoom.distance = deltaDistance;
 
@@ -106,7 +109,7 @@ map.ontouchmove = function (event) {
 
         updateSvgViewport();
 
-        
+
     } else if (event.touches.length == 1 && isMouseOrFingerDown && previousMouseOrFingerMove != null) {
         const deltaX = event.touches[0].screenX - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenX : 0);
         const deltaY = event.touches[0].screenY - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenY : 0);
@@ -217,7 +220,7 @@ var FloorMap = {
                     gender = "м./ж.";
             }
             resultRoomName = "Туалет " + gender + " " + transliterate(roomIdSplit[2]);
-            if(roomIdSplit[3]) {
+            if (roomIdSplit[3]) {
                 resultRoomName += "-" + roomIdSplit[3];
             }
         }
@@ -249,13 +252,13 @@ var FloorMap = {
         else if (roomIdSplit[0] == "CAFFEE") {
             resultRoomName = "Кафе";
         }
-        else if(roomIdSplit[0] == "COMMENDA") {
+        else if (roomIdSplit[0] == "COMMENDA") {
             resultRoomName = "Ключи";
         }
-        else if(roomIdSplit[0] == "SMALL" && roomIdSplit[1] == "CAFFEE") {
+        else if (roomIdSplit[0] == "SMALL" && roomIdSplit[1] == "CAFFEE") {
             resultRoomName = "Буфет " + roomIdSplit[2];
         }
-        else if(roomIdSplit[0] == "LIB") {
+        else if (roomIdSplit[0] == "LIB") {
             resultRoomName = "Читательный зал " + roomIdSplit[1];
         }
         else if (/^L[0-9]{3}$/.test(roomIdSplit[0])) {
@@ -301,14 +304,14 @@ var FloorMap = {
 }
 
 
-function highlightRoom(room,strokeColor) {
-    if(!strokeColor) {
+function highlightRoom(room, strokeColor) {
+    if (!strokeColor) {
         strokeColor = "#f06292";
     }
     let newStyle = "fill: #b39ddb; stroke: " + strokeColor + "; stroke-width: 2px";
     let children = document.getElementById(room.roomGroupId).childNodes;
-    for(let i = 0; i < children.length; i++) {
-        if(children[i].id && !children[i].id.includes("_0")) {
+    for (let i = 0; i < children.length; i++) {
+        if (children[i].id && !children[i].id.includes("_0")) {
             //children[i].removeAttribute("class");
             children[i].setAttribute("style", newStyle);
         }
@@ -317,8 +320,8 @@ function highlightRoom(room,strokeColor) {
 
 function unhighlightRoom(room) {
     let children = document.getElementById(room.roomGroupId).childNodes;
-    for(let i = 0; i < children.length; i++) {
-        if(children[i].id && !children[i].id.includes("_0")) {
+    for (let i = 0; i < children.length; i++) {
+        if (children[i].id && !children[i].id.includes("_0")) {
             children[i].removeAttribute("style");
         }
     }
@@ -333,7 +336,7 @@ window.addEventListener('resize', onResize);
 
 
 
-var addOnClickEventsOnEachRoom = function() {
+var addOnClickEventsOnEachRoom = function () {
     /*
     let roomObject = {
                 roomGroupId: roomsContainers[i].id,
@@ -343,10 +346,15 @@ var addOnClickEventsOnEachRoom = function() {
             }
     */
     let rooms = FloorMap.getRooms();
-    for(let i = 0; i < rooms.length; i++) {
+    for (let i = 0; i < rooms.length; i++) {
         let roomGroup = document.getElementById(rooms[i].roomGroupId);
-        roomGroup.addEventListener("click", function(roomObject) {
-            openWindow("room-screen", roomObject);
+        roomGroup.addEventListener("mousedown", function (roomObject, event) {
+            mouseDownPos = event;
+        }.bind(null, rooms[i]));
+        roomGroup.addEventListener("mouseup", function (roomObject, event) {
+            if (mouseDownPos == null || mouseDownPos.clientX == event.clientX && mouseDownPos.clientY == event.clientY) {
+                openWindow("room-screen", roomObject); 
+            }
         }.bind(null, rooms[i]));
     }
 }
