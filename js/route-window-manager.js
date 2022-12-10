@@ -37,10 +37,10 @@ window.addEventListener("load", function() {
 });
 
 function openCloseMenu() {
-    if(menuDiv.getAttribute("class") == "menu-inline-div menu-inline-animation-out") {
-        menuDiv.setAttribute("class", "menu-inline-div menu-inline-animation-in");
-    } else {
+    if(menuDiv.getAttribute("class") == "menu-inline-div menu-inline-animation-in") {
         menuDiv.setAttribute("class", "menu-inline-div menu-inline-animation-out");
+    } else {
+        menuDiv.setAttribute("class", "menu-inline-div menu-inline-animation-in");
     }
 }
 

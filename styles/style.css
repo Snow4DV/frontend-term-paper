@@ -481,13 +481,22 @@ textarea:focus + .label-textarea .text {
     95% {
         display: flex;
         opacity: 0;
+        height: 0px;
+        padding-top: 0px;
         
     }
 
     100% {
-        display: none;
         opacity: 0;
         height: 0px;
         padding-top: 0px;
     }
+}
+
+.menu-inline-animation-out-finished
+{
+    display: none;
+    opacity: 0;
+    height: 0px;
+    padding-top: 0px;
 }
