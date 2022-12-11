@@ -17,12 +17,6 @@
 
 
 
-body {
-    background-color: #eeeeee;
-    overflow: hidden; 
-    margin: 0px;
-  }
-
 
 
   .fbutton {
@@ -61,18 +55,19 @@ body {
     overflow: hidden;
  }
 
+body {
+  overflow-y:scroll;
+}
 
-
-
- .route-window {
+html {
     z-index: 2;
     position: fixed;
     top: 1%;
+    background-color: #eeeeee;
     padding: 20px;
     border-radius:  10px;
     background-color: white;
     box-shadow: 0px 0px 3px black;
-    overflow: hidden;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
     -webkit-font-smoothing: antialiased;
@@ -88,14 +83,15 @@ body {
     left: 50%;
     transform: translate(-50%, 0%);
     margin-left: 0%;
+    overflow-y:scroll
   }
 
   ::-webkit-scrollbar {
     width: 0px;
-    background: transparent; /* make scrollbar transparent */
+    background: transparent; 
 }
 
-  .route-window:hover {
+  html {
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
 
@@ -215,20 +211,6 @@ body {
   
  
 
-
-.path-polyline {
-    stroke-width: 3px;
-  stroke: #f44336;
-  fill: none;
-  border-radius: 1px;
-  animation-direction: alternate;
-}
-
-.path-polyline-animation {
-  animation-direction: alternate;
-}
-
-
 textarea, .label .text {
   font-size: 16px;
 }
@@ -281,6 +263,8 @@ textarea:focus + .label-textarea .text {
 
 .screen-title > h2 {
   line-height: 0.0;
+  color: black;
+  text-emphasis-color: black;
 }
 
 .screen-title {
@@ -369,4 +353,13 @@ textarea:focus + .label-textarea .text {
         height: 0px;
         padding-top: 0px;
     }
+}
+
+footer {
+  width: calc(100% - 40px);
+  position: fixed;
+  bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

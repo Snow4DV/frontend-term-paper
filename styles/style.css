@@ -520,3 +520,13 @@ textarea:focus + .label-textarea .text {
   text-rendering: optimizeLegibility;
   border: 3px;
 }
+
+footer {
+  width: calc(90%);
+  position: fixed;
+  bottom: 5px;
+  left: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
