@@ -132,6 +132,21 @@ let updateSvgViewport = function () {
     }
 }
 
+function zoom(xFloat, yFloat, scaleDelta) {
+    let oldDimensions = { width: window.innerWidth / scale, height: window.innerHeight / scale };
+
+    scale += scaleDelta;
+
+    if (scale < 0.1) scale = 0.1;
+
+    let newDimensions = { width: window.innerWidth / scale, height: window.innerHeight / scale };
+
+
+
+    leftTopPoint.x += (oldDimensions.width - newDimensions.width) * xFloat;
+    leftTopPoint.y += (oldDimensions.height - newDimensions.height) * yFloat;
+    updateSvgViewport();
+}
 
 let init = function () {
     setVisibleFloor("floor2");
@@ -139,23 +154,14 @@ let init = function () {
 
     map.addEventListener('wheel', function (event) {
 
-        let oldDimensions = { width: window.innerWidth / scale, height: window.innerHeight / scale };
 
-        scale += event.wheelDeltaY > 0 ? 0.15 : -0.15;
 
-        if (scale < 0.1) scale = 0.1;
-
-        let newDimensions = { width: window.innerWidth / scale, height: window.innerHeight / scale };
-
+        let scaleDelta = event.wheelDeltaY > 0 ? 0.15 : -0.15;
 
         let xRel = event.clientX / window.innerWidth;
         let yRel = event.clientY / window.innerHeight;
 
-        leftTopPoint.x += (oldDimensions.width - newDimensions.width) * xRel;
-        leftTopPoint.y += (oldDimensions.height - newDimensions.height) * yRel;
-
-
-        updateSvgViewport();
+        zoom(xRel, yRel, scaleDelta);
 
 
 
@@ -170,6 +176,13 @@ let init = function () {
             button.setAttribute("class", "active-fbutton fbutton");
         }).bind(null, floors[i], button));
     }
+
+    document.getElementById("zoom-in-button").addEventListener("click", function() {
+        zoom(0.5, 0.5, 0.25);
+    });
+    document.getElementById("zoom-out-button").addEventListener("click", function() {
+        zoom(0.5, 0.5, -0.25);
+    });
 
     document.getElementById("down-floor-button").addEventListener("click", function () {
         let newFloorIndex = floors.indexOf(currentFloorId) + 1;
