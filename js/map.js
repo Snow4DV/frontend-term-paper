@@ -111,8 +111,10 @@ map.ontouchmove = function (event) {
 
 
     } else if (event.touches.length == 1 && isMouseOrFingerDown && previousMouseOrFingerMove != null) {
-        const deltaX = event.touches[0].screenX - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenX : 0);
-        const deltaY = event.touches[0].screenY - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenY : 0);
+        const deltaX = event.touches[0].screenX - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenX 
+            : 0);
+        const deltaY = event.touches[0].screenY - (previousMouseOrFingerMove != null ? previousMouseOrFingerMove.touches[0].screenY 
+            : 0);
         leftTopPoint.x -= deltaX / scale;
         leftTopPoint.y -= deltaY / scale;
         updateSvgViewport();

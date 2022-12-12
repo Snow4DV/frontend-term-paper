@@ -99,11 +99,13 @@ WayFinder = {
                     this.graph.addLine(coords.x1, coords.y1, floorLines[j].id, coords.x2, coords.y2, floor, floor);
                     for (let k = 0; k < portalWays.length; k++) {
                         let dstNode = document.querySelector("#" + escapeDot(portalWays[k]));
-                        if (portalWays[k].split(".").length > 0 && portalWays[k].split(".")[2] != floor && this.getTypeOfLine(dstNode) == "Portal") { // Check "if it is a portal to another floor" is implemented
+                        if (portalWays[k].split(".").length > 0 && portalWays[k].split(".")[2] != floor && this.getTypeOfLine(dstNode) == "Portal") { 
+                            // Check "if it is a portal to another floor" is implemented
                             let dstPortal = dstNode;
                             let dstCoords = this.getXAndYByHTML(dstPortal);
                             if (this.compareFloors(floorLines[j].id, dstPortal.id) > 0) {
-                                this.graph.addLine(coords.x2, coords.y2, floorLines[j].id + "-to-" + dstPortal.id, dstCoords.x1, dstCoords.y1, floor, portalWays[k].split(".")[2]); // Fake line between portals. It's a portal between floors so it will not be drawn
+                                this.graph.addLine(coords.x2, coords.y2, floorLines[j].id + "-to-" + dstPortal.id, dstCoords.x1, dstCoords.y1, floor, portalWays[k].split(".")[2]); 
+                                // Fake line between portals. It's a portal between floors so it will not be drawn
                                 // Note that it will be added only once because of the comparison. [btw it is newer zero because zero will not be passed]
                             }
                         }
@@ -204,7 +206,8 @@ WayFinder = {
 
 
             } else {
-                resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].setAttribute("values", resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].getAttribute("values") + " " + path[i].x + ", " + path[i].y);
+                resultWay[path[i].floor][resultWay[path[i].floor].length - 1].childNodes[0].setAttribute("values", resultWay[path[i].floor][resultWay[path[i].floor].length - 1]
+                .childNodes[0].getAttribute("values") + " " + path[i].x + ", " + path[i].y);
             }
         }
 
