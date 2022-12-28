@@ -507,7 +507,7 @@ textarea:focus + .label-textarea .text {
 .zoom {
   position: fixed;
   width: 40px;
-  bottom: 5%;
+  bottom: 6%;
   left: 2%;
   border-radius:  10px;
   background-color: white;
@@ -524,7 +524,7 @@ textarea:focus + .label-textarea .text {
 footer {
   width: calc(90%);
   position: fixed;
-  bottom: 5px;
+  bottom: 1px;
   left: 5%;
   display: flex;
   align-items: center;
